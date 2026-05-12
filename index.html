@@ -1152,12 +1152,30 @@ function toast(msg,type){const t=document.getElementById('toast');t.textContent=
 function today(){return new Date().toISOString().slice(0,10);}
 
 // ===================== PERSISTENCE =====================
-function saveData(){
-  try{const d=JSON.stringify({users,umbrellas,subs});window._appData=d;}catch(e){}
-}
-function loadData(){
-  try{if(window._appData){const d=JSON.parse(window._appData);users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];}}catch(e){}
-}
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyATDkKgS-Eu_z_kVT_F5POattOp_xcewtw",
+  authDomain: "ch-budget-portal.firebaseapp.com",
+  projectId: "ch-budget-portal",
+  storageBucket: "ch-budget-portal.firebasestorage.app",
+  messagingSenderId: "85525194091",
+  appId: "1:85525194091:web:ffd1655c1ca23af31e582e"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
 
 // ===================== INIT =====================
 loadData();
