@@ -935,7 +935,7 @@ function renderUmbrellas(){
         <div>${stBadge}</div>
         <div class="sub-actions">
           ${(isAdmin||canEditSub(s))?`<button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button>`:`<button class="btn-icon" onclick="openSubForm('${s.id}')" title="ดูรายละเอียด">👁️</button>`}
-          <button class="btn-icon" onclick="duplicateSub('${s.id}')" title="คัดลอก">📋</button>
+          ${(isAdmin||canEditSub(s))?`<button class="btn-icon" onclick="duplicateSub('${s.id}')" title="คัดลอก">📋</button>`:''}
           <button class="btn-icon" onclick="exportWordById('${s.id}')" title="Export Word">📄</button>
           ${(isAdmin||canEditSub(s))?`<button class="btn-icon" onclick="deleteSub('${s.id}')" title="ลบ">🗑️</button>`:''}
         </div>
@@ -1103,6 +1103,7 @@ function deleteSub(id){
 
 function duplicateSub(id){
   const s=subs.find(x=>x.id===id);if(!s)return;
+  if(!canEditSub(s)){toast('ไม่สามารถคัดลอกโครงการของผู้ใช้คนอื่นได้','err');return;}
   const n=JSON.parse(JSON.stringify(s));n.id=Date.now().toString();n.name+=' (สำเนา)';n.status='draft';n.created=new Date().toISOString();
   subs.push(n);saveData();renderUmbrellas();toast('คัดลอกสำเร็จ');
 }
