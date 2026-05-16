@@ -1439,163 +1439,53 @@ function toast(msg,type){const t=document.getElementById('toast');t.textContent=
 function today(){const d=new Date();const y=d.getFullYear()+543;const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
 
 // ===================== PERSISTENCE (Firestore) =====================
-<script type="module">
-  // 1. Import Firebase SDK versions ใหม่ล่าสุด (V11)
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+const DOC_REF = db.collection('appData').doc('main');
+let _saving = false;
 
-  // 2. Firebase Configuration ของโรงพยาบาลคุณ
-  const firebaseConfig = { 
-    apiKey: "AIzaSyCY3Iz2GdFVUDO18U03o0kYgqTO5Fq-Hj8", 
-    authDomain: "ch-budget-4f50b.firebaseapp.com", 
-    projectId: "ch-budget-4f50b", 
-    storageBucket: "ch-budget-4f50b.firebasestorage.app", 
-    messagingSenderId: "893904525839", 
-    appId: "1:893904525839:web:4dc910cb707989524b617a" 
-  };
+function saveData(){
+  try{
+    const d = {users, umbrellas, subs, updatedAt: new Date().toISOString()};
+    window._appData = JSON.stringify(d);
+    // Debounce Firestore writes
+    if(_saving) return;
+    _saving = true;
+    setTimeout(()=>{
+      DOC_REF.set(d).catch(e=>console.warn('Firestore save error:',e));
+      _saving = false;
+    }, 500);
+  }catch(e){console.warn('saveData error:',e);}
+}
 
-  // 3. เริ่มต้นการทำงานของ Firebase, Firestore และ Auth
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  // ตั้งค่าให้จดจำสถานะการล็อกอินไว้ในเบราว์เซอร์ แม้จะปิดหน้าเว็บไปแล้วเปิดใหม่
-  setPersistence(auth, browserSessionPersistence);
-
-  const DOC_REF = doc(db, 'appData', 'main');
-  let _saving = false;
-
-  // ===================== ระบบดึง/บันทึกไฟล์ข้อมูล (Save/Load) =====================
-  
-  async function saveData(){
-    try{
-      // ดึงข้อมูลจากตัวแปรในหน้าเว็บปัจจุบันมาเตรียมบันทึก
-      const d = { 
-        users: window.users || [], 
-        umbrellas: window.umbrellas || [], 
-        subs: window.subs || [], 
-        updatedAt: new Date().toISOString() 
-      };
-      
-      window._appData = JSON.stringify(d);
-
-      // กลไก Debounce ป้องกันการเขียนข้อมูลลง Firebase ถี่เกินไปภายใน 500ms
-      if(_saving) return;
-      _saving = true;
-
-      setTimeout(async () => {
-        try {
-          await setDoc(DOC_REF, d);
-          console.log('Firebase: บันทึกข้อมูลสำเร็จ');
-        } catch (e) {
-          console.warn('Firestore save error:', e);
-        } finally {
-          _saving = false;
-        }
-      }, 500);
-
-    } catch(e) { console.warn('saveData error:', e); }
-  }
-
-  async function loadFromFirestore(){
-    try{
-      const snap = await getDoc(DOC_REF);
-      if(snap.exists()){
-        const d = snap.data();
-        
-        // ส่งต่อข้อมูลไปยังระบบเดิมในแอป
-        window.users = d.users || [];
-        window.umbrellas = d.umbrellas || [];
-        window.subs = d.subs || [];
-        window._appData = JSON.stringify(d);
-
-        // สั่งให้หน้าจอรีเรนเดอร์ข้อมูลขึ้นมาใหม่ (เชื่อมกับโค้ด UI เก่าในไฟล์ของคุณ)
-        if(window.currentUser){
-          if (typeof window.updateDash === 'function') window.updateDash();
-          if (typeof window.renderUmbrellas === 'function') window.renderUmbrellas();
-        }
-        console.log('Firebase: ดึงไฟล์ข้อมูลสำเร็จ');
-      } else {
-        console.log('Firebase: ไม่พบไฟล์ข้อมูลเดิมบนระบบ');
-      }
-    } catch(e) { console.warn('Firestore load error:', e); }
-  }
-
-  // ฟังก์ชันดึงข้อมูลแบบออฟไลน์ด่วนในหน่วยความจำ
-  function loadData(){
-    try{
-      if(window._appData){
-        const d = JSON.parse(window._appData);
-        window.users = d.users || window.users;
-        window.umbrellas = d.umbrellas || [];
-        window.subs = d.subs || [];
-      }
-    } catch(e) {}
-  }
-
-  // ===================== ระบบล็อกอินสิทธิ์การเข้าใช้งาน (Authentication) =====================
-
-  // เชื่อมปุ่มกด Login จากหน้าจอเดิมที่คุณสร้างไว้
-  const loginForm = document.getElementById('loginForm');
-  if(loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      const pass = document.getElementById('loginPass').value;
-      const errorMsg = document.getElementById('loginError');
-
-      if(errorMsg) errorMsg.style.display = 'none';
-
-      try {
-        // ลงชื่อเข้าใช้งานด้วย Email และ Password ผ่าน Firebase
-        await signInWithEmailAndPassword(auth, email, pass);
-      } catch (err) {
-        console.error("Login failed:", err);
-        if(errorMsg) {
-          errorMsg.innerText = "อีเมลหรือรหัสผ่านไม่ถูกต้อง หรือคุณไม่มีสิทธิ์เข้าใช้งาน";
-          errorMsg.style.display = 'block';
-        }
-      }
-    });
-  }
-
-  // ฟังก์ชันสำหรับการ Log out (สามารถนำไปผูกกับปุ่มออกจากระบบเพิ่มเติมได้)
-  async function handleLogout() {
-    try {
-      await signOut(auth);
-      location.reload();
-    } catch (e) { console.warn('Logout error:', e); }
-  }
-
-  // ตรวจสอบการล็อกอินแบบ Real-time ของผู้ใช้งาน
-  onAuthStateChanged(auth, (user) => {
-    const loginOverlay = document.getElementById('loginOverlay');
-    
-    if (user) {
-      // เมื่อผู้ใช้ผ่านการ Authen สำเร็จ
-      console.log("Authenticated as:", user.email);
-      window.currentUser = user.email; // ตั้งชื่อผู้ใช้งานปัจจุบันตามระบบเก่าของคุณ
-      
-      // ซ่อนหน้าต่างล็อกอินออกไปเพื่อเข้าใช้งานหน้าเว็บ
-      if(loginOverlay) loginOverlay.style.display = 'none';
-      
-      // โหลดไฟล์ข้อมูลจาก Firebase ทันที
-      loadData();
-      loadFromFirestore();
-    } else {
-      // หากยังไม่ได้ล็อกอิน ให้เปิดหน้าต่างบังคับกรอกรหัสผ่านขึ้นมา
-      window.currentUser = null;
-      if(loginOverlay) loginOverlay.style.display = 'flex';
+function loadData(){
+  // Load from in-memory first (instant)
+  try{
+    if(window._appData){
+      const d=JSON.parse(window._appData);
+      users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];
     }
-  });
+  }catch(e){}
+}
 
-  // ส่งออกฟังก์ชันให้ส่วนอื่นของ HTML สามารถกดเรียกใช้งานได้
-  window.saveData = saveData;
-  window.loadData = loadData;
-  window.loadFromFirestore = loadFromFirestore;
-  window.handleLogout = handleLogout;
+async function loadFromFirestore(){
+  try{
+    const snap = await DOC_REF.get();
+    if(snap.exists){
+      const d = snap.data();
+      users = d.users || users;
+      umbrellas = d.umbrellas || [];
+      subs = d.subs || [];
+      window._appData = JSON.stringify(d);
+      // Re-render if already in app
+      if(currentUser){
+        updateDash();renderUmbrellas();
+      }
+    }
+  }catch(e){console.warn('Firestore load error:',e);}
+}
 
+// ===================== INIT =====================
+loadData();
+loadFromFirestore();
 </script>
 </body>
 </html>
