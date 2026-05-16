@@ -367,6 +367,20 @@ select.fc{cursor:pointer}
     <div class="fr full"><div class="fg"><label>Strategic Initiatives (SI) ของ รพ.</label><div id="uf_si_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
     <div class="fr full"><div class="fg"><label>ยุทธศาสตร์ รจภ ที่เชื่อมโยง <span style="font-weight:400;font-size:11px;color:var(--g500)">(เลือกได้มากกว่า 1)</span></label><div id="uf_cra_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
     <div class="fr full"><div class="fg"><label>Corporate KPIs (CKPIs) - ยุทธศาสตร์ รจภ</label><div id="uf_ckpi_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
+    <hr style="border:none;border-top:1px dashed var(--g300);margin:12px 0">
+    <div style="font-weight:600;font-size:14px;color:var(--pri);margin-bottom:8px">ข้อมูลเพิ่มเติม (สำหรับเอกสาร DOCX)</div>
+    <div class="fr"><div class="fg"><label>หน่วยงาน ฝ่าย/งาน</label><input type="text" class="fc" id="uf_dept" placeholder="สำนักงานผู้อำนวยการโรงพยาบาล"></div>
+    <div class="fg"><label>ผู้รับผิดชอบ</label><input type="text" class="fc" id="uf_resp" placeholder="ชื่อ-นามสกุล (คั่นด้วย , หากหลายคน)"></div></div>
+    <div class="fr"><div class="fg"><label>ลักษณะโครงการ</label><div class="rg"><label class="rl"><input type="radio" name="uf_nature" value="ongoing"> ต่อเนื่อง</label><label class="rl"><input type="radio" name="uf_nature" value="new"> ใหม่</label></div></div>
+    <div class="fg"><label>กลุ่มเป้าหมาย (จำนวน)</label><input type="text" class="fc" id="uf_targetNum" placeholder="เช่น 50-140 คน"></div></div>
+    <div class="fr full"><div class="fg"><label>5. หลักการและเหตุผล</label><textarea class="fc" id="uf_rationale" rows="4" placeholder="ความเป็นมา สถานการณ์ ความจำเป็น..."></textarea></div></div>
+    <div class="fr full"><div class="fg"><label>6. วัตถุประสงค์โครงการ</label><textarea class="fc" id="uf_objectives" rows="3" placeholder="1. เพื่อ... &#10;2. เพื่อ..."></textarea></div></div>
+    <div class="fr full"><div class="fg"><label>7. วิธีการดำเนินงาน</label><textarea class="fc" id="uf_method" rows="3" placeholder="ขั้นตอนหลัก เช่น จัดกิจกรรมสัมมนา, อบรม, KM..."></textarea></div></div>
+    <div class="fr full"><div class="fg"><label>8. กลุ่มเป้าหมาย (รายละเอียด)</label><textarea class="fc" id="uf_targetDesc" rows="2" placeholder="บุคลากรทุกระดับ ระดับบริหาร หัวหน้างาน..."></textarea></div></div>
+    <div class="fr"><div class="fg"><label>9. สถานที่ดำเนินการ</label><input type="text" class="fc" id="uf_location" placeholder="ราชวิทยาลัยจุฬาภรณ์"></div>
+    <div class="fg"><label>ระยะเวลาดำเนินการ</label><input type="text" class="fc" id="uf_duration" placeholder="เช่น ตุลาคม 2568 - กันยายน 2569"></div></div>
+    <div class="fr full"><div class="fg"><label>13. ผลลัพธ์ (Outcome)</label><textarea class="fc" id="uf_outcome" rows="3" placeholder="ผลที่คาดว่าจะได้รับ..."></textarea></div></div>
+    <div class="fr full"><div class="fg"><label>14. ผลกระทบ (Impact)</label><textarea class="fc" id="uf_impact" rows="2" placeholder="ผลกระทบด้านบวก/ลบ ถ้ามี..."></textarea></div></div>
   </div>
   <div class="modal-ft"><button class="btn btn-o" onclick="closeUmbModal()">ยกเลิก</button><button class="btn btn-p" onclick="saveUmbrella()">💾 บันทึก</button></div>
 </div>
@@ -445,11 +459,12 @@ select.fc{cursor:pointer}
   </div>
   <div class="modal-ft">
     <button class="btn btn-o hidden" id="btnPrev" onclick="prevStep()">← ย้อนกลับ</button>
+    <div id="readOnlyWarn" class="hidden" style="background:#fff3cd;color:#856404;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600"></div>
     <div style="flex:1"></div>
     <button class="btn btn-o" onclick="closeSubModal()">ยกเลิก</button>
-    <button class="btn btn-ok" onclick="saveSub('draft')">💾 บันทึกร่าง</button>
+    <button class="btn btn-ok btn-save-sub" onclick="saveSub('draft')">💾 บันทึกร่าง</button>
     <button class="btn btn-p" id="btnNext" onclick="nextStep()">ถัดไป →</button>
-    <button class="btn btn-p hidden" id="btnSubmit" onclick="saveSub('submitted')">📤 ส่งโครงการ</button>
+    <button class="btn btn-p hidden btn-save-sub" id="btnSubmit" onclick="saveSub('submitted')">📤 ส่งโครงการ</button>
     <button class="btn btn-o hidden" id="btnExportWord" onclick="exportWord()">📄 Export Word</button>
   </div>
 </div>
@@ -459,6 +474,7 @@ select.fc{cursor:pointer}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 <script>
   firebase.initializeApp({
     apiKey: "AIzaSyATDkKgS-Eu_z_kVT_F5POattOp_xcewtw",
@@ -620,12 +636,23 @@ function refreshView(v){
 // ===================== UMBRELLA CRUD =====================
 function openUmbrellaForm(id){
   editUmbId=id||null;
-  if(id){const u=umbrellas.find(x=>x.id===id);if(u){document.getElementById('uf_name').value=u.name;document.getElementById('uf_so').value=u.so;document.getElementById('uf_obj').value=u.obj||'';document.getElementById('uf_kr').value=u.kr||'';const r=document.querySelector('input[name="uf_type"][value="'+u.type+'"]');if(r)r.checked=true;updateUmbrellaStrategy();// restore saved selections
+  const docFields=['uf_dept','uf_resp','uf_rationale','uf_objectives','uf_method','uf_targetDesc','uf_targetNum','uf_location','uf_duration','uf_outcome','uf_impact'];
+  if(id){const u=umbrellas.find(x=>x.id===id);if(u){document.getElementById('uf_name').value=u.name;document.getElementById('uf_so').value=u.so;document.getElementById('uf_obj').value=u.obj||'';document.getElementById('uf_kr').value=u.kr||'';const r=document.querySelector('input[name="uf_type"][value="'+u.type+'"]');if(r)r.checked=true;
+  // load new doc fields
+  document.getElementById('uf_dept').value=u.dept2||'';document.getElementById('uf_resp').value=u.resp||'';
+  document.getElementById('uf_rationale').value=u.rationale||'';document.getElementById('uf_objectives').value=u.objectives||'';
+  document.getElementById('uf_method').value=u.method||'';document.getElementById('uf_targetDesc').value=u.targetDesc||'';
+  document.getElementById('uf_targetNum').value=u.targetNum||'';document.getElementById('uf_location').value=u.location||'';
+  document.getElementById('uf_duration').value=u.duration||'';document.getElementById('uf_outcome').value=u.outcome||'';
+  document.getElementById('uf_impact').value=u.impact||'';
+  const rn=document.querySelector('input[name="uf_nature"][value="'+(u.nature||'ongoing')+'"]');if(rn)rn.checked=true;
+  updateUmbrellaStrategy();// restore saved selections
   setTimeout(()=>{// restore CRA strategies
     if(u.craStrategies&&u.craStrategies.length){document.querySelectorAll('#uf_cra_area input[name="uf_cra"]').forEach(cb=>{cb.checked=u.craStrategies.includes(cb.value);});updateCraCkpis();}
     if(u.si&&u.si.length){u.si.forEach(sid=>{const cb=document.querySelector('#uf_si_area input[value="'+sid+'"]');if(cb)cb.checked=true;});}
     if(u.craCkpis&&u.craCkpis.length){u.craCkpis.forEach(ck=>{const cb=document.querySelector('#uf_ckpi_area input[value="'+CSS.escape(ck)+'"]');if(cb)cb.checked=true;});}},50);}document.getElementById('umbModalTitle').textContent='แก้ไขโครงการร่ม';}
-  else{document.getElementById('uf_name').value='';document.getElementById('uf_so').value='';document.getElementById('uf_obj').value='';document.getElementById('uf_kr').value='';document.getElementById('uf_si_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_cra_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_ckpi_area').innerHTML='';document.getElementById('umbModalTitle').textContent='เพิ่มโครงการร่ม';}
+  else{document.getElementById('uf_name').value='';document.getElementById('uf_so').value='';document.getElementById('uf_obj').value='';document.getElementById('uf_kr').value='';document.getElementById('uf_si_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_cra_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_ckpi_area').innerHTML='';document.getElementById('umbModalTitle').textContent='เพิ่มโครงการร่ม';
+  docFields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});document.querySelector('input[name="uf_nature"][value="ongoing"]').checked=true;}
   document.getElementById('umbModal').classList.remove('hidden');
 }
 
@@ -668,8 +695,17 @@ function saveUmbrella(){
   // Collect CRA CKPIs checkboxes
   const craCkpis=[];document.querySelectorAll('#uf_ckpi_area input[type=checkbox]:checked').forEach(cb=>craCkpis.push(cb.value));
   const ckpi=craCkpis.join(', ');
-  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;u.si=si;u.craStrategies=craStrategies;u.craCkpis=craCkpis;}}
-  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi,si,craStrategies,craCkpis});}
+  // Collect new doc fields
+  const dept2=document.getElementById('uf_dept').value;const resp=document.getElementById('uf_resp').value;
+  const nature=(document.querySelector('input[name="uf_nature"]:checked')||{}).value||'ongoing';
+  const rationale=document.getElementById('uf_rationale').value;const objectives=document.getElementById('uf_objectives').value;
+  const method=document.getElementById('uf_method').value;const targetDesc=document.getElementById('uf_targetDesc').value;
+  const targetNum=document.getElementById('uf_targetNum').value;const location=document.getElementById('uf_location').value;
+  const duration=document.getElementById('uf_duration').value;const outcome=document.getElementById('uf_outcome').value;
+  const impact=document.getElementById('uf_impact').value;
+  const docData={dept2,resp,nature,rationale,objectives,method,targetDesc,targetNum,location,duration,outcome,impact};
+  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;u.si=si;u.craStrategies=craStrategies;u.craCkpis=craCkpis;Object.assign(u,docData);}}
+  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi,si,craStrategies,craCkpis,...docData});}
   saveData();closeUmbModal();go('umbrella');toast('บันทึกโครงการร่มสำเร็จ');
 }
 
@@ -678,6 +714,187 @@ function deleteUmbrella(id){
   umbrellas=umbrellas.filter(x=>x.id!==id);
   subs=subs.filter(x=>x.umbId!==id);
   saveData();renderUmbrellas();updateDash();toast('ลบโครงการร่มสำเร็จ');
+}
+
+// ===================== GENERATE PROJECT DOCX =====================
+async function generateProjectDocx(umbId){
+  const u=umbrellas.find(x=>x.id===umbId);if(!u){toast('ไม่พบโครงการร่ม','err');return;}
+  const mySubs=subs.filter(s=>s.umbId===umbId);
+  const D=docx;
+  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,AlignmentType,
+    HeadingLevel,BorderStyle,WidthType,ShadingType,PageBreak}=D;
+
+  const border={style:BorderStyle.SINGLE,size:1,color:'999999'};
+  const borders={top:border,bottom:border,left:border,right:border};
+  const cellM={top:60,bottom:60,left:100,right:100};
+  const soName=SO[u.so]||'';
+  const craKeys=getUmbCRA(u);
+  const siList=HOSPITAL_SI[u.so]||[];
+  const selectedSI=(u.si||[]).map(sid=>{const s=siList.find(x=>x.id===sid);return s?`${sid}: ${s.name}`:sid;});
+
+  // Budget calc
+  let totalBudget=0;
+  const catNames={b1:'งบบุคลากร',b2a:'ค่าตอบแทน',b2b:'ค่าใช้สอย',b2c:'ค่าวัสดุ',b2d:'ค่าสาธารณูปโภค',b3a:'ค่าครุภัณฑ์',b3b:'ค่าที่ดินและสิ่งก่อสร้าง'};
+  let grandCats={b1:0,b2a:0,b2b:0,b2c:0,b2d:0,b3a:0,b3b:0};
+
+  // Build sub-project budget detail rows
+  const budgetDetailRows=[];
+  mySubs.forEach((sub,si)=>{
+    let subTotal=0;let subQ={q1:0,q2:0,q3:0,q4:0};
+    const items=(sub.budgetItems||[]);
+    items.forEach(bi=>{const v=(bi.q1||0)+(bi.q2||0)+(bi.q3||0)+(bi.q4||0);subTotal+=v;subQ.q1+=(bi.q1||0);subQ.q2+=(bi.q2||0);subQ.q3+=(bi.q3||0);subQ.q4+=(bi.q4||0);if(grandCats[bi.catId]!==undefined)grandCats[bi.catId]+=v;});
+    totalBudget+=subTotal;
+    // Sub-project header row
+    budgetDetailRows.push(mkRow([{t:`กิจกรรมย่อย ที่ ${si+1}. ${sub.name||''}`,b:true,span:1},{t:fmt(subTotal),b:true},{t:fmt(subQ.q1)},{t:fmt(subQ.q2)},{t:fmt(subQ.q3)},{t:fmt(subQ.q4)}],true));
+    // Category rows under each sub
+    const catTotals={};
+    items.forEach(bi=>{if(!catTotals[bi.catId])catTotals[bi.catId]={q1:0,q2:0,q3:0,q4:0,total:0};catTotals[bi.catId].q1+=(bi.q1||0);catTotals[bi.catId].q2+=(bi.q2||0);catTotals[bi.catId].q3+=(bi.q3||0);catTotals[bi.catId].q4+=(bi.q4||0);catTotals[bi.catId].total+=(bi.q1||0)+(bi.q2||0)+(bi.q3||0)+(bi.q4||0);});
+    // Group by parent category
+    const hasB1=catTotals.b1;
+    const hasB2=catTotals.b2a||catTotals.b2b||catTotals.b2c||catTotals.b2d;
+    const hasB3=catTotals.b3a||catTotals.b3b;
+    if(hasB1){budgetDetailRows.push(mkRow([{t:'1. งบบุคลากร'},{t:''},{t:''},{t:''},{t:''},{t:''}]));budgetDetailRows.push(mkRow([{t:'  งบบุคลากร'},{t:fmt(catTotals.b1.total)},{t:fmt(catTotals.b1.q1)},{t:fmt(catTotals.b1.q2)},{t:fmt(catTotals.b1.q3)},{t:fmt(catTotals.b1.q4)}]));}
+    if(hasB2){budgetDetailRows.push(mkRow([{t:'2. งบดำเนินงาน/งบเงินอุดหนุน'},{t:''},{t:''},{t:''},{t:''},{t:''}]));
+      ['b2a','b2b','b2c','b2d'].forEach(k=>{if(catTotals[k]){budgetDetailRows.push(mkRow([{t:'  '+catNames[k]},{t:fmt(catTotals[k].total)},{t:fmt(catTotals[k].q1)},{t:fmt(catTotals[k].q2)},{t:fmt(catTotals[k].q3)},{t:fmt(catTotals[k].q4)}]));}});
+      // Item-level detail for each b2 category
+      items.filter(bi=>['b2a','b2b','b2c','b2d'].includes(bi.catId)).forEach(bi=>{
+        const v=(bi.q1||0)+(bi.q2||0)+(bi.q3||0)+(bi.q4||0);
+        if(bi.desc)budgetDetailRows.push(mkRow([{t:'    '+bi.desc,sz:18},{t:fmt(v),sz:18},{t:fmt(bi.q1||0),sz:18},{t:fmt(bi.q2||0),sz:18},{t:fmt(bi.q3||0),sz:18},{t:fmt(bi.q4||0),sz:18}]));
+      });
+    }
+    if(hasB3){budgetDetailRows.push(mkRow([{t:'3. งบลงทุน'},{t:''},{t:''},{t:''},{t:''},{t:''}]));
+      ['b3a','b3b'].forEach(k=>{if(catTotals[k]){budgetDetailRows.push(mkRow([{t:'  '+catNames[k]},{t:fmt(catTotals[k].total)},{t:fmt(catTotals[k].q1)},{t:fmt(catTotals[k].q2)},{t:fmt(catTotals[k].q3)},{t:fmt(catTotals[k].q4)}]));}});
+    }
+  });
+
+  function fmt(n){return n?n.toLocaleString():'';}
+  function mkRow(cells,isHeader){
+    const colW=[3200,1200,1200,1200,1200,1200];
+    return new TableRow({children:cells.map((c,i)=>new TableCell({
+      borders,width:{size:colW[i],type:WidthType.DXA},margins:cellM,
+      shading:isHeader?{fill:'E8F0FE',type:ShadingType.CLEAR}:undefined,
+      children:[new Paragraph({alignment:i>0?AlignmentType.RIGHT:AlignmentType.LEFT,children:[new TextRun({text:c.t||'',bold:!!c.b,size:c.sz||20,font:'TH SarabunPSK'})]})]
+    }))});
+  }
+
+  // Build strategy text
+  let stratText=`ยุทธศาสตร์ที่ ${craKeys.join(', ')}: `;
+  craKeys.forEach(sk=>{const st=CRA_STRATEGY[sk];if(st)stratText+=`${sk} ${st.name}; `;});
+
+  const krText=u.kr||'(ระบุ KRs)';
+  const ckpiText=(u.craCkpis||[]).join(', ')||'(ระบุ CKPIs)';
+
+  // Summary budget table (item 10)
+  const summaryBudgetRows=[];
+  const catOrder=['b1','b2a','b2b','b2c','b2d','b3a','b3b'];
+  const parentCat={b1:'1. งบบุคลากร',b2a:'2. งบดำเนินงาน/งบเงินอุดหนุน',b3a:'3. งบลงทุน'};
+  let lastParent='';
+  catOrder.forEach(k=>{
+    const v=grandCats[k];
+    let pLabel='';
+    if(k==='b1'&&!lastParent){pLabel='1. งบบุคลากร';lastParent='b1';}
+    if(k==='b2a'&&lastParent!=='b2'){pLabel='2. งบดำเนินงาน/งบเงินอุดหนุน';lastParent='b2';}
+    if(k==='b3a'&&lastParent!=='b3'){pLabel='3. งบลงทุน';lastParent='b3';}
+    if(pLabel){summaryBudgetRows.push(new TableRow({children:[
+      new TableCell({borders,width:{size:5000,type:WidthType.DXA},margins:cellM,children:[new Paragraph({children:[new TextRun({text:pLabel,bold:true,size:22,font:'TH SarabunPSK'})]})]}),
+      new TableCell({borders,width:{size:2000,type:WidthType.DXA},margins:cellM,children:[new Paragraph({children:[]})]})
+    ]}));}
+    if(v){summaryBudgetRows.push(new TableRow({children:[
+      new TableCell({borders,width:{size:5000,type:WidthType.DXA},margins:cellM,children:[new Paragraph({children:[new TextRun({text:'   - '+catNames[k],size:22,font:'TH SarabunPSK'})]})]}),
+      new TableCell({borders,width:{size:2000,type:WidthType.DXA},margins:cellM,children:[new Paragraph({alignment:AlignmentType.RIGHT,children:[new TextRun({text:fmt(v),size:22,font:'TH SarabunPSK'})]})]})
+    ]}));}
+  });
+
+  // Nature text
+  const natureMap={strategic:'ยุทธศาสตร์',basic:'พื้นฐาน'};
+  const natureMap2={ongoing:'ต่อเนื่อง',new:'ใหม่'};
+  const typeCheckStr=u.type==='strategic'?'(✓) โครงการยุทธศาสตร์   (   ) โครงการพื้นฐาน':'(   ) โครงการยุทธศาสตร์   (✓) โครงการพื้นฐาน';
+  const natureCheckStr=(u.nature||'ongoing')==='ongoing'?'(✓) โครงการต่อเนื่อง   (   ) โครงการใหม่':'(   ) โครงการต่อเนื่อง   (✓) โครงการใหม่';
+
+  // Year
+  const thYear=(new Date().getFullYear())+543+1;
+
+  // Build objectives as numbered paragraphs
+  const objLines=(u.objectives||'(ระบุวัตถุประสงค์)').split('\n').filter(l=>l.trim());
+  const methodLines=(u.method||'(ระบุวิธีการดำเนินงาน)').split('\n').filter(l=>l.trim());
+  const outcomeLines=(u.outcome||'(ระบุผลลัพธ์)').split('\n').filter(l=>l.trim());
+
+  function p(text,opts={}){return new Paragraph({spacing:{after:opts.after||100,before:opts.before||0},indent:opts.indent?{left:opts.indent}:undefined,alignment:opts.align||AlignmentType.LEFT,children:[new TextRun({text,bold:!!opts.bold,size:opts.size||24,font:'TH SarabunPSK',italics:!!opts.italic})]});}
+
+  const doc=new Document({
+    styles:{default:{document:{run:{font:'TH SarabunPSK',size:24}}}},
+    sections:[{
+      properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1440}}},
+      children:[
+        p('แบบพอร์มเสนอตั้งโครงการ',{bold:true,size:32,align:AlignmentType.CENTER,after:200}),
+        p(''),
+        p(`1. ชื่อโครงการ  ${u.name}`,{bold:true}),
+        p(`2. หน่วยงาน ฝ่าย/งาน  ${u.dept2||'(ระบุหน่วยงาน)'}`,{bold:true}),
+        p(`   ชื่อผู้รับผิดชอบ  ${u.resp||'(ระบุชื่อผู้รับผิดชอบ)'}`,{}),
+        p('3. ประเภทโครงการ',{bold:true}),
+        p(`   ${typeCheckStr}`),
+        p(`   ${natureCheckStr}`),
+        p('4. ความสอดคล้องเชื่อมโยงกับยุทธศาสตร์ราชวิทยาลัยจุฬาภรณ์',{bold:true}),
+        p(`   ${stratText}`),
+        p(`   วัตถุประสงค์เชิงกลยุทธ์ (Strategic Objectives): SO${u.so}: ${soName}`,{indent:360}),
+        p(`   ผลลัพธ์สำคัญ (Key Results: KRs): ${krText}`,{indent:360}),
+        p(`   ตัวชี้วัดระดับองค์กร Corporate KPIs (CKPIs): ${ckpiText}`,{indent:360}),
+        ...(selectedSI.length?[p(`   Strategic Initiatives (SI): ${selectedSI.join(', ')}`,{indent:360})]:[]),
+        p('5. หลักการและเหตุผล',{bold:true,before:120}),
+        p(`   ${u.rationale||'(ระบุหลักการและเหตุผล)'}`,{indent:360}),
+        p('6. วัตถุประสงค์โครงการ',{bold:true,before:120}),
+        ...objLines.map(l=>p(`   ${l}`,{indent:360})),
+        p('7. วิธีการดำเนินงาน',{bold:true,before:120}),
+        ...methodLines.map(l=>p(`   ${l}`,{indent:360})),
+        p('8. กลุ่มเป้าหมาย',{bold:true,before:120}),
+        p(`   ${u.targetDesc||'(ระบุกลุ่มเป้าหมาย)'}  จำนวน ${u.targetNum||'.....'} คน`,{indent:360}),
+        p(`9. สถานที่ดำเนินการ  ${u.location||'ราชวิทยาลัยจุฬาภรณ์'}`,{bold:true,before:120}),
+        p(`   ระยะเวลาดำเนินการ  ${u.duration||'(ระบุระยะเวลา)'}`,{indent:360}),
+        p(`10. วงเงินงบประมาณรายจ่าย ตลอดโครงการ จำนวน ${fmt(totalBudget)} บาท`,{bold:true,before:120}),
+        new Table({
+          width:{size:7000,type:WidthType.DXA},columnWidths:[5000,2000],
+          rows:[
+            new TableRow({children:[
+              new TableCell({borders,width:{size:5000,type:WidthType.DXA},margins:cellM,shading:{fill:'D5E8F0',type:ShadingType.CLEAR},children:[new Paragraph({children:[new TextRun({text:'รายการ',bold:true,size:22,font:'TH SarabunPSK'})]})]}),
+              new TableCell({borders,width:{size:2000,type:WidthType.DXA},margins:cellM,shading:{fill:'D5E8F0',type:ShadingType.CLEAR},children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:'จำนวนเงิน (บาท)',bold:true,size:22,font:'TH SarabunPSK'})]})]})
+            ]}),
+            ...summaryBudgetRows,
+            new TableRow({children:[
+              new TableCell({borders,width:{size:5000,type:WidthType.DXA},margins:cellM,shading:{fill:'FFF3CD',type:ShadingType.CLEAR},children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:'รวมทั้งสิ้น',bold:true,size:22,font:'TH SarabunPSK'})]})]}),
+              new TableCell({borders,width:{size:2000,type:WidthType.DXA},margins:cellM,shading:{fill:'FFF3CD',type:ShadingType.CLEAR},children:[new Paragraph({alignment:AlignmentType.RIGHT,children:[new TextRun({text:fmt(totalBudget),bold:true,size:22,font:'TH SarabunPSK'})]})]})
+            ]})
+          ]
+        }),
+        p(''),
+        p(`11. รายละเอียดงบประมาณ และแผนการดำเนินงาน ประจำปีงบประมาณ พ.ศ. ${thYear} จำนวน ${fmt(totalBudget)} บาท`,{bold:true,before:120}),
+        new Table({
+          width:{size:9200,type:WidthType.DXA},columnWidths:[3200,1200,1200,1200,1200,1200],
+          rows:[
+            mkRow([{t:'รายการ',b:true},{t:'รวมทั้งสิ้น',b:true},{t:'ไตรมาส 1',b:true},{t:'ไตรมาส 2',b:true},{t:'ไตรมาส 3',b:true},{t:'ไตรมาส 4',b:true}],true),
+            mkRow([{t:`รวมงบประมาณโครงการ: ${u.name}`,b:true},{t:fmt(totalBudget),b:true},{t:''},{t:''},{t:''},{t:''}],true),
+            ...budgetDetailRows,
+          ]
+        }),
+        p(''),
+        p('13. ผลลัพธ์ (Outcome)',{bold:true,before:120}),
+        ...outcomeLines.map(l=>p(`   ${l}`,{indent:360})),
+        p('14. ผลกระทบ (Impact)',{bold:true,before:120}),
+        p(`   ${u.impact||'(ระบุผลกระทบ)'}`,{indent:360}),
+        p('15. ผลการดำเนินงานที่ผ่านมา',{bold:true,before:120}),
+        p('   ..........................................................................................................................',{indent:360}),
+        p(''),p(''),
+        p('ลงชื่อ ........................................',{align:AlignmentType.LEFT,indent:720}),
+        p(`(${u.resp||'..................................'})`,{indent:1200}),
+        p('ผู้เสนอโครงการ',{indent:1200}),
+      ]
+    }]
+  });
+
+  const blob=await Packer.toBlob(doc);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`โครงการ_${u.name.replace(/[^ก-๙a-zA-Z0-9]/g,'_')}.docx`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  toast('ดาวน์โหลด DOCX สำเร็จ');
 }
 
 function renderUmbrellas(){
@@ -697,6 +914,7 @@ function renderUmbrellas(){
         <div class="umb-meta">
           <span>${mySubs.length} โครงการย่อย</span>
           <span style="font-weight:600">${budget.toLocaleString()} บาท</span>
+          <button class="btn-icon" onclick="event.stopPropagation();generateProjectDocx('${u.id}')" title="Download DOCX">📄</button>
           ${isAdmin?`<button class="btn-icon" onclick="event.stopPropagation();openUmbrellaForm('${u.id}')" title="แก้ไข">✏️</button><button class="btn-icon" onclick="event.stopPropagation();deleteUmbrella('${u.id}')" title="ลบ">🗑️</button>`:''}
         </div>
       </div>
@@ -716,10 +934,10 @@ function renderUmbrellas(){
         <div style="display:flex;flex-wrap:wrap;gap:2px">${craBdg}${siBdg}</div>
         <div>${stBadge}</div>
         <div class="sub-actions">
-          <button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button>
+          ${(isAdmin||canEditSub(s))?`<button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button>`:`<button class="btn-icon" onclick="openSubForm('${s.id}')" title="ดูรายละเอียด">👁️</button>`}
           <button class="btn-icon" onclick="duplicateSub('${s.id}')" title="คัดลอก">📋</button>
           <button class="btn-icon" onclick="exportWordById('${s.id}')" title="Export Word">📄</button>
-          <button class="btn-icon" onclick="deleteSub('${s.id}')" title="ลบ">🗑️</button>
+          ${(isAdmin||canEditSub(s))?`<button class="btn-icon" onclick="deleteSub('${s.id}')" title="ลบ">🗑️</button>`:''}
         </div>
       </div>`;
     });
@@ -755,13 +973,21 @@ function openSubForm(id,umbId){
   if(id){
     const s=subs.find(x=>x.id===id);if(!s)return;
     loadSubForm(s);
-    document.getElementById('subModalTitle').textContent='แก้ไข: '+s.name;
+    const canEdit=canEditSub(s);
+    document.getElementById('subModalTitle').textContent=(canEdit?'แก้ไข: ':'ดูรายละเอียด: ')+s.name;
     document.getElementById('btnExportWord').classList.remove('hidden');
+    // Show read-only warning for non-owner
+    const roWarn=document.getElementById('readOnlyWarn');
+    if(roWarn){if(!canEdit){roWarn.classList.remove('hidden');roWarn.textContent='🔒 คุณสามารถดูข้อมูลได้เท่านั้น (เจ้าของโครงการ: '+(s.owner||'-')+')';}else{roWarn.classList.add('hidden');}}
+    // Disable save buttons for non-owner
+    document.querySelectorAll('#subModal .btn-save-sub').forEach(btn=>{btn.disabled=!canEdit;btn.style.opacity=canEdit?'1':'0.4';});
   }else{
     resetSubForm();
     if(umbId)document.getElementById('sf_umb').value=umbId;
     document.getElementById('subModalTitle').textContent='เพิ่มโครงการย่อยใหม่';
     document.getElementById('btnExportWord').classList.add('hidden');
+    const roWarn=document.getElementById('readOnlyWarn');if(roWarn)roWarn.classList.add('hidden');
+    document.querySelectorAll('#subModal .btn-save-sub').forEach(btn=>{btn.disabled=false;btn.style.opacity='1';});
   }
   document.getElementById('subModal').classList.remove('hidden');
   goStep(1);
@@ -862,12 +1088,18 @@ function saveSub(status){
   if(!d.umbId){toast('กรุณาเลือกโครงการร่ม','err');goStep(1);return;}
   if(status==='submitted'&&(!d.rationale||!d.objectives||!d.outcome)){toast('กรุณากรอกข้อมูลที่จำเป็นให้ครบ','err');return;}
   d.status=status;d.modified=new Date().toISOString();
-  if(editSubId){d.id=editSubId;const idx=subs.findIndex(x=>x.id===editSubId);if(idx>=0)subs[idx]=d;}
+  if(editSubId){const existing=subs.find(x=>x.id===editSubId);if(existing&&!canEditSub(existing)){toast('ไม่สามารถแก้ไขโครงการของผู้ใช้คนอื่นได้','err');return;}d.id=editSubId;d.owner=existing?existing.owner:d.owner;const idx=subs.findIndex(x=>x.id===editSubId);if(idx>=0)subs[idx]=d;}
   else{d.id=Date.now().toString();d.created=new Date().toISOString();subs.push(d);}
   saveData();closeSubModal();go('umbrella');toast(status==='draft'?'บันทึกร่างสำเร็จ':'ส่งโครงการสำเร็จ');
 }
 
-function deleteSub(id){if(!confirm('ลบโครงการย่อยนี้?'))return;subs=subs.filter(x=>x.id!==id);saveData();renderUmbrellas();updateDash();toast('ลบสำเร็จ');}
+function canEditSub(s){return currentUser&&(currentUser.role==='admin'||s.owner===currentUser.username);}
+
+function deleteSub(id){
+  const s=subs.find(x=>x.id===id);
+  if(s&&!canEditSub(s)){toast('ไม่สามารถลบโครงการของผู้ใช้คนอื่นได้','err');return;}
+  if(!confirm('ลบโครงการย่อยนี้?'))return;subs=subs.filter(x=>x.id!==id);saveData();renderUmbrellas();updateDash();toast('ลบสำเร็จ');
+}
 
 function duplicateSub(id){
   const s=subs.find(x=>x.id===id);if(!s)return;
