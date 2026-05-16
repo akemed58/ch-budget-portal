@@ -1439,53 +1439,98 @@ function toast(msg,type){const t=document.getElementById('toast');t.textContent=
 function today(){const d=new Date();const y=d.getFullYear()+543;const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
 
 // ===================== PERSISTENCE (Firestore) =====================
-const DOC_REF = db.collection('appData').doc('main');
-let _saving = false;
+<script type="module">
+  // 1. Import Firebase Modular SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-function saveData(){
-  try{
-    const d = {users, umbrellas, subs, updatedAt: new Date().toISOString()};
-    window._appData = JSON.stringify(d);
-    // Debounce Firestore writes
-    if(_saving) return;
-    _saving = true;
-    setTimeout(()=>{
-      DOC_REF.set(d).catch(e=>console.warn('Firestore save error:',e));
-      _saving = false;
-    }, 500);
-  }catch(e){console.warn('saveData error:',e);}
-}
+  // 2. Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCY3Iz2GdFVUDO18U03o0kYgqTO5Fq-Hj8",
+    authDomain: "ch-budget-4f50b.firebaseapp.com",
+    projectId: "ch-budget-4f50b",
+    storageBucket: "ch-budget-4f50b.firebasestorage.app",
+    messagingSenderId: "893904525839",
+    appId: "1:893904525839:web:4dc910cb707989524b617a"
+  };
 
-function loadData(){
-  // Load from in-memory first (instant)
-  try{
-    if(window._appData){
-      const d=JSON.parse(window._appData);
-      users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];
-    }
-  }catch(e){}
-}
+  // 3. Initialize Firebase & Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-async function loadFromFirestore(){
-  try{
-    const snap = await DOC_REF.get();
-    if(snap.exists){
-      const d = snap.data();
-      users = d.users || users;
-      umbrellas = d.umbrellas || [];
-      subs = d.subs || [];
+  // Reference ถึง Document (Collection: appData, ID: main)
+  const docRef = doc(db, 'appData', 'main');
+  let _saving = false;
+
+  // --- Functions สำหรับจัดการข้อมูล ---
+
+  async function saveData() {
+    try {
+      // เตรียมข้อมูล (สมมติว่าตัวแปร users, umbrellas, subs มีอยู่แล้วใน global scope)
+      const d = { 
+        users: window.users || [], 
+        umbrellas: window.umbrellas || [], 
+        subs: window.subs || [], 
+        updatedAt: new Date().toISOString() 
+      };
+      
       window._appData = JSON.stringify(d);
-      // Re-render if already in app
-      if(currentUser){
-        updateDash();renderUmbrellas();
-      }
-    }
-  }catch(e){console.warn('Firestore load error:',e);}
-}
 
-// ===================== INIT =====================
-loadData();
-loadFromFirestore();
+      // Debounce: ป้องกันการเขียนข้อมูลถี่เกินไป
+      if (_saving) return;
+      _saving = true;
+
+      setTimeout(async () => {
+        try {
+          // ใช้ setDoc แทน .set()
+          await setDoc(docRef, d);
+          console.log('Firestore saved successfully');
+        } catch (e) {
+          console.warn('Firestore save error:', e);
+        } finally {
+          _saving = false;
+        }
+      }, 500);
+    } catch (e) {
+      console.warn('saveData error:', e);
+    }
+  }
+
+  async function loadFromFirestore() {
+    try {
+      // ใช้ getDoc แทน .get()
+      const snap = await getDoc(docRef);
+      
+      if (snap.exists()) {
+        const d = snap.data();
+        
+        // อัปเดตตัวแปรใน App (ต้องมั่นใจว่าตัวแปรเหล่านี้ถูกประกาศไว้ที่ global)
+        window.users = d.users || [];
+        window.umbrellas = d.umbrellas || [];
+        window.subs = d.subs || [];
+        
+        window._appData = JSON.stringify(d);
+
+        // Re-render UI (ถ้ามีฟังก์ชันเหล่านี้)
+        if (typeof currentUser !== 'undefined' && currentUser) {
+          if (typeof updateDash === 'function') updateDash();
+          if (typeof renderUmbrellas === 'function') renderUmbrellas();
+        }
+        console.log('Firestore loaded');
+      } else {
+        console.log('No data found in Firestore');
+      }
+    } catch (e) {
+      console.warn('Firestore load error:', e);
+    }
+  }
+
+  // ส่งออกฟังก์ชันไปไว้ที่ window เพื่อให้ปุ่มหรือส่วนอื่นๆ เรียกใช้ได้
+  window.saveData = saveData;
+  window.loadFromFirestore = loadFromFirestore;
+
+  // --- INIT ---
+  // ดึงข้อมูลทันทีที่โหลดหน้าเว็บ
+  loadFromFirestore();
+
 </script>
-</body>
-</html>
