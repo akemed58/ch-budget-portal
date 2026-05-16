@@ -201,12 +201,27 @@ select.fc{cursor:pointer}
 .sum-tbl{width:100%;border-collapse:collapse}
 .sum-tbl th,.sum-tbl td{padding:10px 14px;border:1px solid var(--g200);font-size:13px}
 .sum-tbl th{background:var(--pri);color:#fff;font-weight:500;text-align:center}
-.sum-tbl td{text-align:right}.sum-tbl td:first-child,.sum-tbl td:nth-child(2){text-align:left}
+.sum-tbl td{text-align:right}.sum-tbl td:first-child,.sum-tbl td:nth-child(2),.sum-tbl td:nth-child(3),.sum-tbl td:nth-child(4),.sum-tbl td:nth-child(5){text-align:left}
 .sum-tbl .row-umb{background:var(--g50);font-weight:600}
 .sum-tbl .row-sub{font-weight:400}
 .sum-tbl .row-sub td:first-child{padding-left:28px}
 .sum-tbl .row-grand{background:var(--pri-ll);font-weight:700}
 .sum-tbl .diff-pos{color:var(--ok)}.sum-tbl .diff-neg{color:var(--err)}
+
+/* ===== STRATEGY VIEW ===== */
+.strat-card{background:#fff;border-radius:var(--r);margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;border-left:4px solid var(--pri)}
+.strat-card.cra-s1{border-left-color:#6a1b9a}.strat-card.cra-s2{border-left-color:#0277bd}.strat-card.cra-s3{border-left-color:var(--so1)}.strat-card.cra-s4{border-left-color:#e65100}.strat-card.cra-s5{border-left-color:var(--ok)}
+.strat-card .strat-hd{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.strat-card .strat-hd:hover{background:var(--g50)}
+.strat-card .strat-title{font-size:15px;font-weight:600}.strat-card .strat-sub{font-size:12px;color:var(--g500);margin-top:2px}
+.strat-card .strat-body{border-top:1px solid var(--g200);padding:12px 20px}
+.strat-card .strat-proj{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid var(--g100);gap:10px;font-size:13px}
+.strat-card .strat-proj:last-child{border-bottom:none}
+.strat-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;display:inline-block;margin:1px 2px}
+.strat-badge.sb-s1{background:#f3e5f5;color:#6a1b9a}.strat-badge.sb-s2{background:#e1f5fe;color:#0277bd}.strat-badge.sb-s3{background:#e3f2fd;color:var(--so1)}.strat-badge.sb-s4{background:#fff3e0;color:#e65100}.strat-badge.sb-s5{background:#e8f5e9;color:var(--ok)}
+.strat-badge.sb-si{background:var(--pri-ll);color:var(--pri)}
+.strat-toggle{transition:.2s}.strat-toggle.active{background:var(--pri);color:#fff}
+.si-card{background:var(--g50);border-radius:var(--rs);padding:10px 16px;margin:8px 0;border-left:3px solid var(--pri)}
 
 /* ===== PRINT ===== */
 @media print{.header,.nav,.btn,.fbar,.auth-box{display:none!important}.main{padding:10px}}
@@ -263,6 +278,7 @@ select.fc{cursor:pointer}
   <div class="ntab" onclick="go('umbrella')">โครงการร่ม</div>
   <div class="ntab" onclick="go('all')">โครงการย่อยทั้งหมด</div>
   <div class="ntab" onclick="go('summary')">สรุปงบประมาณ</div>
+  <div class="ntab" onclick="go('strategy')">ยุทธศาสตร์</div>
   <div class="ntab" onclick="go('feedback')">Budget Feedback</div>
   <div class="ntab" onclick="go('users')" id="navUsers">จัดการผู้ใช้</div>
 </div>
@@ -280,12 +296,11 @@ select.fc{cursor:pointer}
     <div class="stat"><div class="sl">งบที่ได้รับอนุมัติ</div><div class="sv" id="dApproved">0</div><div class="ss">บาท</div></div>
   </div>
   <div class="sec-hd"><div class="sec-ti">กลุ่มโครงการตาม Strategic Objectives</div><button class="btn btn-p" onclick="openUmbrellaForm()" id="btnAddUmb">+ เพิ่มโครงการร่ม</button></div>
-  <div class="so-grid">
-    <div class="so-card so1" onclick="go('umbrella','1')"><div class="so-hd"><div class="so-ic">1</div><div><div class="so-ti">ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ</div><div class="so-su">Service Excellence</div></div></div><div class="so-ft"><span id="dSO1c">0 โครงการ</span><span id="dSO1b">0 บาท</span></div></div>
-    <div class="so-card so2" onclick="go('umbrella','2')"><div class="so-hd"><div class="so-ic">2</div><div><div class="so-ti">ยกระดับผลลัพธ์สู่ความเป็นเลิศ</div><div class="so-su">Outcome Excellence</div></div></div><div class="so-ft"><span id="dSO2c">0 โครงการ</span><span id="dSO2b">0 บาท</span></div></div>
-    <div class="so-card so3" onclick="go('umbrella','3')"><div class="so-hd"><div class="so-ic">3</div><div><div class="so-ti">สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน</div><div class="so-su">Sustainable Development</div></div></div><div class="so-ft"><span id="dSO3c">0 โครงการ</span><span id="dSO3b">0 บาท</span></div></div>
-    <div class="so-card so4" onclick="go('umbrella','4')"><div class="so-hd"><div class="so-ic">4</div><div><div class="so-ti">บูรณาการกับการศึกษาและการวิจัย</div><div class="so-su">Education & Research Integration</div></div></div><div class="so-ft"><span id="dSO4c">0 โครงการ</span><span id="dSO4b">0 บาท</span></div></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-sm btn-p" id="dashViewHosp" onclick="setDashView('hosp')">SO โรงพยาบาล</button>
+    <button class="btn btn-sm btn-o" id="dashViewCRA" onclick="setDashView('cra')">ยุทธศาสตร์ รจภ</button>
   </div>
+  <div class="so-grid" id="soGridContainer"></div>
   <div class="chart-grid">
     <div class="chart-card"><h3>สัดส่วนงบประมาณตาม SO</h3><div id="chSO"></div></div>
     <div class="chart-card"><h3>สัดส่วนตามหมวดรายจ่าย</h3><div id="chCat"></div></div>
@@ -319,6 +334,14 @@ select.fc{cursor:pointer}
   <div id="summaryContent"></div>
 </div>
 
+<!-- STRATEGY -->
+<div class="main hidden" id="v-strategy">
+  <div class="sec-hd"><div class="sec-ti">ยุทธศาสตร์</div>
+    <div style="display:flex;gap:8px"><button class="btn btn-p strat-toggle active" id="stratBtnCRA" onclick="toggleStrategyView('cra')">มุมมอง รจภ</button><button class="btn btn-o strat-toggle" id="stratBtnHosp" onclick="toggleStrategyView('hosp')">มุมมอง รพ.</button></div>
+  </div>
+  <div id="strategyContent"></div>
+</div>
+
 <!-- FEEDBACK -->
 <div class="main hidden" id="v-feedback">
   <div class="sec-hd"><div class="sec-ti">Budget Feedback: เปรียบเทียบงบที่ขอ vs งบที่ได้</div></div>
@@ -337,11 +360,13 @@ select.fc{cursor:pointer}
   <div class="modal-hd"><h2 id="umbModalTitle">เพิ่มโครงการร่ม</h2><button class="modal-x" onclick="closeUmbModal()">&times;</button></div>
   <div class="modal-bd">
     <div class="fr full"><div class="fg"><label>ชื่อโครงการร่ม <span class="req">*</span></label><input type="text" class="fc" id="uf_name" placeholder="เช่น โครงการพัฒนาระบบบริการผู้ป่วย"></div></div>
-    <div class="fr"><div class="fg"><label>Strategic Objective <span class="req">*</span></label><select class="fc" id="uf_so"><option value="">-- เลือก --</option><option value="1">SO1: ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ</option><option value="2">SO2: ยกระดับผลลัพธ์สู่ความเป็นเลิศ</option><option value="3">SO3: สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน</option><option value="4">SO4: บูรณาการกับการศึกษาและการวิจัย</option></select></div>
+    <div class="fr"><div class="fg"><label>Strategic Objective <span class="req">*</span></label><select class="fc" id="uf_so" onchange="updateUmbrellaStrategy()"><option value="">-- เลือก --</option><option value="1">SO1: ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ</option><option value="2">SO2: ยกระดับผลลัพธ์สู่ความเป็นเลิศ</option><option value="3">SO3: สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน</option><option value="4">SO4: บูรณาการกับการศึกษาและการวิจัย</option></select></div>
     <div class="fg"><label>ประเภท</label><div class="rg"><label class="rl"><input type="radio" name="uf_type" value="strategic" checked> ยุทธศาสตร์</label><label class="rl"><input type="radio" name="uf_type" value="basic"> พื้นฐาน</label></div></div></div>
     <div class="fr full"><div class="fg"><label>วัตถุประสงค์ของโครงการร่ม</label><textarea class="fc" id="uf_obj" rows="3" placeholder="วัตถุประสงค์ภาพรวมของโครงการร่มนี้"></textarea></div></div>
     <div class="fr full"><div class="fg"><label>Key Results (KRs)</label><input type="text" class="fc" id="uf_kr" placeholder="ผลลัพธ์สำคัญที่คาดหวัง"></div></div>
-    <div class="fr full"><div class="fg"><label>Corporate KPIs (CKPIs)</label><input type="text" class="fc" id="uf_ckpi" placeholder="ตัวชี้วัดระดับองค์กร"></div></div>
+    <div class="fr full"><div class="fg"><label>Strategic Initiatives (SI) ของ รพ.</label><div id="uf_si_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
+    <div class="fr full"><div class="fg"><label>ยุทธศาสตร์ รจภ ที่เชื่อมโยง <span style="font-weight:400;font-size:11px;color:var(--g500)">(เลือกได้มากกว่า 1)</span></label><div id="uf_cra_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
+    <div class="fr full"><div class="fg"><label>Corporate KPIs (CKPIs) - ยุทธศาสตร์ รจภ</label><div id="uf_ckpi_area" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:13px;color:var(--g500)">กรุณาเลือก SO ก่อน</div></div></div>
   </div>
   <div class="modal-ft"><button class="btn btn-o" onclick="closeUmbModal()">ยกเลิก</button><button class="btn btn-p" onclick="saveUmbrella()">💾 บันทึก</button></div>
 </div>
@@ -366,8 +391,8 @@ select.fc{cursor:pointer}
         <div class="fr full"><div class="fg"><label>1. ชื่อโครงการย่อย <span class="req">*</span></label><input type="text" class="fc" id="sf_name" placeholder="ระบุชื่อโครงการย่อย"></div></div>
         <div class="fr"><div class="fg"><label>2. หน่วยงาน ฝ่าย/งาน <span class="req">*</span></label><input type="text" class="fc" id="sf_dept" placeholder="ฝ่าย/งาน"></div><div class="fg"><label>ผู้รับผิดชอบ</label><input type="text" class="fc" id="sf_resp" placeholder="ชื่อ-นามสกุล"></div></div>
         <div class="fr"><div class="fg"><label>3. ประเภทโครงการ <span class="req">*</span></label><div class="rg"><label class="rl"><input type="radio" name="sf_type" value="strategic"> ยุทธศาสตร์</label><label class="rl"><input type="radio" name="sf_type" value="basic"> พื้นฐาน</label></div></div><div class="fg"><label>ลักษณะ</label><div class="rg"><label class="rl"><input type="radio" name="sf_nature" value="ongoing"> ต่อเนื่อง</label><label class="rl"><input type="radio" name="sf_nature" value="new"> ใหม่</label></div></div></div>
-        <div class="fr"><div class="fg"><label>4. วัตถุประสงค์เชิงกลยุทธ์ (SO)</label><input type="text" class="fc" id="sf_soDetail"></div><div class="fg"><label>ผลลัพธ์สำคัญ (KRs)</label><input type="text" class="fc" id="sf_kr"></div></div>
-        <div class="fr full"><div class="fg"><label>ตัวชี้วัดระดับองค์กร CKPIs</label><input type="text" class="fc" id="sf_ckpi"></div></div>
+        <div class="fr"><div class="fg"><label>4. วัตถุประสงค์เชิงกลยุทธ์ (SO)</label><select class="fc" id="sf_soDetail"><option value="">-- เลือก --</option><option value="SO1: ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ">SO1: ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ</option><option value="SO2: ยกระดับผลลัพธ์สู่ความเป็นเลิศ">SO2: ยกระดับผลลัพธ์สู่ความเป็นเลิศ</option><option value="SO3: สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน">SO3: สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน</option><option value="SO4: บูรณาการกับการศึกษาและการวิจัย">SO4: บูรณาการกับการศึกษาและการวิจัย</option></select></div><div class="fg"><label>ผลลัพธ์สำคัญ (KRs)</label><input type="text" class="fc" id="sf_kr"></div></div>
+        <div class="fr full"><div class="fg"><label>ยุทธศาสตร์ที่เกี่ยวข้อง (SI / CRA CKPIs)</label><div id="sf_strategy_info" style="border:1px solid var(--g300);border-radius:var(--rs);padding:10px;min-height:40px;font-size:12px;color:var(--g500);background:var(--g50)">เลือกโครงการร่มเพื่อแสดงข้อมูลยุทธศาสตร์อัตโนมัติ</div><input type="hidden" id="sf_ckpi"></div></div>
       </div></div>
     </div>
     <!-- STEP 2 -->
@@ -377,7 +402,7 @@ select.fc{cursor:pointer}
         <div class="fr full"><div class="fg"><label>6. วัตถุประสงค์โครงการ <span class="req">*</span></label><textarea class="fc" id="sf_objectives" rows="3"></textarea></div></div>
         <div class="fr full"><div class="fg"><label>7. วิธีการดำเนินงาน <span class="req">*</span></label><textarea class="fc" id="sf_method" rows="4"></textarea></div></div>
         <div class="fr full"><div class="fg"><label>8. กลุ่มเป้าหมาย</label><textarea class="fc" id="sf_target" rows="2"></textarea></div></div>
-        <div class="fr"><div class="fg"><label>9. สถานที่ดำเนินการ</label><input type="text" class="fc" id="sf_location"></div><div class="fg"><label>ระยะเวลา</label><div style="display:flex;gap:8px"><input type="date" class="fc" id="sf_start"><span style="align-self:center;font-size:12px">ถึง</span><input type="date" class="fc" id="sf_end"></div></div></div>
+        <div class="fr"><div class="fg"><label>9. สถานที่ดำเนินการ</label><input type="text" class="fc" id="sf_location"></div><div class="fg"><label>ระยะเวลา</label><div style="display:flex;gap:8px"><input type="date" class="fc" id="sf_start"><span style="align-self:center;font-size:12px">ถึง</span><input type="date" class="fc" id="sf_end"></div><div class="hint">* ปีที่แสดงเป็น ค.ศ. (พ.ศ. = ค.ศ. + 543)</div></div></div>
       </div></div>
     </div>
     <!-- STEP 3 -->
@@ -432,6 +457,19 @@ select.fc{cursor:pointer}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyATDkKgS-Eu_z_kVT_F5POattOp_xcewtw",
+    authDomain: "ch-budget-portal.firebaseapp.com",
+    projectId: "ch-budget-portal",
+    storageBucket: "ch-budget-portal.firebasestorage.app",
+    messagingSenderId: "85525194091",
+    appId: "1:85525194091:web:ffd1655c1ca23af31e582e"
+  });
+  const db = firebase.firestore();
+</script>
 <script>
 // ===================== DATA =====================
 let users = [
@@ -467,6 +505,45 @@ const BCATS = [
     {id:'b3b',name:'ค่าที่ดินและสิ่งก่อสร้าง'}
   ]}
 ];
+
+// CRA Strategies (ยุทธศาสตร์ รจภ)
+const CRA_STRATEGY = {
+  'S1': {name:'การจัดการศึกษาเพื่อผลิตกำลังคน', ckpis:['S1.1 หลักสูตรใหม่สะสม','S1.2 ความพึงพอใจบัณฑิต','S1.3 ความพึงพอใจนายจ้าง','S1.4 Credit Bank บูรณาการ','S1.5 บัณฑิตที่มี KSEC','S1.6 Innovation Education']},
+  'S2': {name:'วิจัยและนวัตกรรมเชิงสุขภาพ', ckpis:['S2.1 ผลงานวิจัยใช้ประโยชน์','S2.2 วิจัยตีพิมพ์ Q1','S2.3 นวัตกรรมบริการสุขภาพ','S2.4 ทุนภายนอก >3 ล้าน','S2.5 วิจัย R2R']},
+  'S3': {name:'บริการสุขภาพที่เป็นเลิศ', ckpis:['S3.1 รับรองมาตรฐานสากล','S3.2 ผลลัพธ์เทียบเท่าสากล','S3.3 ร่วมมือองค์กรภายนอก']},
+  'S4': {name:'เทคโนโลยีดิจิทัลและ AI', ckpis:['S4.1 แผนปฏิบัติการดิจิทัล','S4.2 ระบบสนับสนุน','S4.3 ISO/IEC 27001']},
+  'S5': {name:'องค์กรสมรรถนะสูงเพื่อความยั่งยืน', ckpis:['S5.1 EdPEx','S5.2 ITA','S5.3 Employee Engagement','S5.4 EBITDA/รายได้','S5.5 ESG/Net Zero','S5.6 พัฒนาบังคับบัญชา','S5.7 ประสิทธิภาพงบประมาณ']}
+};
+
+// Hospital SO → SI → KPI mapping
+const HOSPITAL_SI = {
+  '1': [ // SO1
+    {id:'SI-1', name:'พัฒนากระบวนการทำงานสู่มาตรฐานสากล', kpis:['1.1 กระบวนการรับรองสากล','2.1 PCT คะแนน≥3.5','2.2 ระบบงานสำคัญ≥3.5','2.3 Self-help group','2.4 Patient safety: Incident Report','2.5 Patient safety: RCA E-up']},
+    {id:'SI-3', name:'ส่งเสริมการรับรองระดับรายโรค', kpis:['3.1 DSC/เฉพาะระบบ']}
+  ],
+  '2': [ // SO2
+    {id:'SI-4', name:'พัฒนาการดูแลผู้ป่วยโรคซับซ้อนผลลัพธ์สากล', kpis:['4.1 Tracer สำคัญผลลัพธ์สากล']}
+  ],
+  '3': [ // SO3
+    {id:'SI-5', name:'นำ LEAN/AI/Tech มาเพิ่มประสิทธิภาพ', kpis:['5.1 Patient experience','5.2 AI เพิ่มประสิทธิภาพ','5.3 Dashboard ตัดสินใจ']},
+    {id:'SI-6', name:'ส่งเสริมความผูกพันบุคลากร (KM)', kpis:['6.1 ชิ้นงาน KM สะสม']},
+    {id:'SI-7', name:'พัฒนาศักยภาพบุคลากรต่อเนื่อง', kpis:['7.1 หัวหน้างานพัฒนาศักยภาพ','7.2 บุคลากรเป้าหมายพัฒนา']},
+    {id:'SI-8', name:'สิ่งแวดล้อมเป็นมิตรต่อโลก', kpis:['8.1 Low carbon healthcare','8.2 GREEN and CLEAN Hospital']},
+    {id:'SI-9', name:'บริหารทรัพย์สินพึ่งพาตนเอง', kpis:['9.1 ประสิทธิภาพงบแผ่นดิน','9.2 ประสิทธิภาพงบรายได้','9.3 ควบคุมต้นทุน/เพิ่มรายได้','9.4 เพิ่มรายได้≥20%','9.5 Gross Profit≥20%']}
+  ],
+  '4': [ // SO4
+    {id:'SI-10', name:'สนับสนุนหลักสูตรการศึกษา รจภ', kpis:['10.1 สถาบันหลักแพทยศาสตร์','10.2 แพทย์ประจำบ้าน','10.3 หลักสูตรระยะสั้น']},
+    {id:'SI-11', name:'วิจัยทางการแพทย์/R2R/นวัตกรรม', kpis:['11.1 วิจัยตีพิมพ์ Q1','11.2 รางวัลวิจัย/สิทธิบัตร','11.3 ทุนวิจัย>3 ล้าน','11.4 R2R สะสม','11.5 วิจัยนานาชาติ']}
+  ]
+};
+
+// Mapping: Hospital SO → which CRA strategies it links to
+const SO_TO_CRA = {
+  '1': ['S3'],      // SO1 → S3 บริการสุขภาพ
+  '2': ['S3'],      // SO2 → S3 บริการสุขภาพ
+  '3': ['S5','S4'], // SO3 → S5 องค์กรสมรรถนะ + S4 Digital
+  '4': ['S1','S2']  // SO4 → S1 การศึกษา + S2 วิจัย
+};
 
 // ===================== AUTH =====================
 function showAuthTab(tab){
@@ -518,7 +595,7 @@ function go(view,soFilter){
   const el=document.getElementById('v-'+view);
   if(el)el.classList.remove('hidden');
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
-  const map={dash:0,umbrella:1,all:2,summary:3,feedback:4,users:5};
+  const map={dash:0,umbrella:1,all:2,summary:3,strategy:4,feedback:5,users:6};
   const idx=map[view];if(idx!==undefined){const tabs=document.querySelectorAll('.ntab');if(tabs[idx])tabs[idx].classList.add('active');}
   if(soFilter&&view==='umbrella'){document.getElementById('fltUmbSO').value=soFilter;}
   refreshView(view);
@@ -529,6 +606,7 @@ function refreshView(v){
   if(v==='umbrella')renderUmbrellas();
   if(v==='all')renderAll();
   if(v==='summary')renderSummary();
+  if(v==='strategy')renderStrategy();
   if(v==='feedback')renderFeedback();
   if(v==='users')renderUsers();
 }
@@ -536,9 +614,34 @@ function refreshView(v){
 // ===================== UMBRELLA CRUD =====================
 function openUmbrellaForm(id){
   editUmbId=id||null;
-  if(id){const u=umbrellas.find(x=>x.id===id);if(u){document.getElementById('uf_name').value=u.name;document.getElementById('uf_so').value=u.so;document.getElementById('uf_obj').value=u.obj||'';document.getElementById('uf_kr').value=u.kr||'';document.getElementById('uf_ckpi').value=u.ckpi||'';const r=document.querySelector('input[name="uf_type"][value="'+u.type+'"]');if(r)r.checked=true;}document.getElementById('umbModalTitle').textContent='แก้ไขโครงการร่ม';}
-  else{document.getElementById('uf_name').value='';document.getElementById('uf_so').value='';document.getElementById('uf_obj').value='';document.getElementById('uf_kr').value='';document.getElementById('uf_ckpi').value='';document.getElementById('umbModalTitle').textContent='เพิ่มโครงการร่ม';}
+  if(id){const u=umbrellas.find(x=>x.id===id);if(u){document.getElementById('uf_name').value=u.name;document.getElementById('uf_so').value=u.so;document.getElementById('uf_obj').value=u.obj||'';document.getElementById('uf_kr').value=u.kr||'';const r=document.querySelector('input[name="uf_type"][value="'+u.type+'"]');if(r)r.checked=true;updateUmbrellaStrategy();// restore saved selections
+  setTimeout(()=>{if(u.si&&u.si.length){u.si.forEach(sid=>{const cb=document.querySelector('#uf_si_area input[value="'+sid+'"]');if(cb)cb.checked=true;});}if(u.craCkpis&&u.craCkpis.length){u.craCkpis.forEach(ck=>{const cb=document.querySelector('#uf_ckpi_area input[value="'+CSS.escape(ck)+'"]');if(cb)cb.checked=true;});}},50);}document.getElementById('umbModalTitle').textContent='แก้ไขโครงการร่ม';}
+  else{document.getElementById('uf_name').value='';document.getElementById('uf_so').value='';document.getElementById('uf_obj').value='';document.getElementById('uf_kr').value='';document.getElementById('uf_si_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_ckpi_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('umbModalTitle').textContent='เพิ่มโครงการร่ม';}
   document.getElementById('umbModal').classList.remove('hidden');
+}
+
+function updateUmbrellaStrategy(){
+  const so=document.getElementById('uf_so').value;
+  const siArea=document.getElementById('uf_si_area');
+  const craArea=document.getElementById('uf_cra_area');
+  const ckpiArea=document.getElementById('uf_ckpi_area');
+  if(!so){siArea.innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';craArea.innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';ckpiArea.innerHTML='';return;}
+  // Populate SI checkboxes
+  const siList=HOSPITAL_SI[so]||[];
+  let siH='';siList.forEach(si=>{siH+=`<label style="display:block;margin-bottom:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="${si.id}" style="accent-color:var(--pri);margin-right:6px"> <strong>${si.id}</strong>: ${si.name}<div style="margin-left:24px;font-size:11px;color:var(--g500)">${si.kpis.join(', ')}</div></label>`;});
+  siArea.innerHTML=siH||'<span style="color:var(--g500)">ไม่มี SI สำหรับ SO นี้</span>';
+  // Populate CRA Strategy checkboxes (S1-S5) - pre-check suggested ones
+  const suggested=SO_TO_CRA[so]||[];
+  let craH='';Object.keys(CRA_STRATEGY).forEach(sk=>{const st=CRA_STRATEGY[sk];const isSugg=suggested.includes(sk);craH+=`<label style="display:inline-flex;align-items:center;margin:4px 16px 4px 0;cursor:pointer;font-size:13px;padding:4px 8px;border-radius:6px;border:1px solid ${isSugg?'var(--pri)':'var(--g300)'};background:${isSugg?'var(--pri-ll)':'#fff'}"><input type="checkbox" name="uf_cra" value="${sk}" ${isSugg?'checked':''} style="accent-color:var(--pri);margin-right:6px" onchange="updateCraCkpis()"> <strong>${sk}</strong>: ${st.name}</label>`;});
+  craArea.innerHTML=craH;
+  updateCraCkpis();
+}
+function updateCraCkpis(){
+  const ckpiArea=document.getElementById('uf_ckpi_area');
+  const selectedCra=[];document.querySelectorAll('#uf_cra_area input[name="uf_cra"]:checked').forEach(cb=>selectedCra.push(cb.value));
+  if(!selectedCra.length){ckpiArea.innerHTML='<span style="color:var(--g500)">เลือกยุทธศาสตร์ รจภ ก่อน</span>';return;}
+  let ckH='';selectedCra.forEach(sk=>{const st=CRA_STRATEGY[sk];if(!st)return;ckH+=`<div style="margin-bottom:8px"><div style="font-weight:600;font-size:13px;color:var(--pri);margin-bottom:4px">${sk}: ${st.name}</div>`;st.ckpis.forEach(c=>{ckH+=`<label style="display:inline-block;margin:2px 10px 2px 0;cursor:pointer;font-size:12px"><input type="checkbox" value="${c}" style="accent-color:var(--acc);margin-right:4px">${c}</label>`;});ckH+='</div>';});
+  ckpiArea.innerHTML=ckH;
 }
 function closeUmbModal(){document.getElementById('umbModal').classList.add('hidden');editUmbId=null;}
 
@@ -549,9 +652,15 @@ function saveUmbrella(){
   const type=(document.querySelector('input[name="uf_type"]:checked')||{}).value||'strategic';
   const obj=document.getElementById('uf_obj').value;
   const kr=document.getElementById('uf_kr').value;
-  const ckpi=document.getElementById('uf_ckpi').value;
-  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;}}
-  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi});}
+  // Collect SI checkboxes
+  const si=[];document.querySelectorAll('#uf_si_area input[type=checkbox]:checked').forEach(cb=>si.push(cb.value));
+  // Collect CRA Strategy checkboxes
+  const craStrategies=[];document.querySelectorAll('#uf_cra_area input[name="uf_cra"]:checked').forEach(cb=>craStrategies.push(cb.value));
+  // Collect CRA CKPIs checkboxes
+  const craCkpis=[];document.querySelectorAll('#uf_ckpi_area input[type=checkbox]:checked').forEach(cb=>craCkpis.push(cb.value));
+  const ckpi=craCkpis.join(', ');
+  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;u.si=si;u.craStrategies=craStrategies;u.craCkpis=craCkpis;}}
+  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi,si,craStrategies,craCkpis});}
   saveData();closeUmbModal();go('umbrella');toast('บันทึกโครงการร่มสำเร็จ');
 }
 
@@ -588,11 +697,14 @@ function renderUmbrellas(){
     mySubs.forEach((s,si)=>{
       const subBudget=calcSubBudget(s);
       const stBadge=s.status==='submitted'?'<span class="badge b-sub">ส่งแล้ว</span>':'<span class="badge b-draft">ร่าง</span>';
+      const craBdg=(SO_TO_CRA[u.so]||[]).map(sk=>`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}</span>`).join('');
+      const siBdg=(u.si||[]).map(sid=>`<span class="strat-badge sb-si">${sid}</span>`).join('');
       html+=`<div class="sub-item">
         <div class="sub-num">${ui+1}.${si+1}</div>
         <div class="sub-name" onclick="openSubForm('${s.id}')">${s.name||'(ไม่มีชื่อ)'}</div>
         <div class="sub-dept">${s.dept||'-'}</div>
         <div class="sub-budget">${subBudget.toLocaleString()}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:2px">${craBdg}${siBdg}</div>
         <div>${stBadge}</div>
         <div class="sub-actions">
           <button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button>
@@ -629,6 +741,7 @@ function openSubForm(id,umbId){
   const sel=document.getElementById('sf_umb');
   sel.innerHTML='<option value="">-- เลือกโครงการร่ม --</option>';
   umbrellas.forEach(u=>{sel.innerHTML+=`<option value="${u.id}">${u.name} (SO${u.so})</option>`;});
+  sel.onchange=function(){updateSubStrategyInfo();};
 
   if(id){
     const s=subs.find(x=>x.id===id);if(!s)return;
@@ -643,6 +756,7 @@ function openSubForm(id,umbId){
   }
   document.getElementById('subModal').classList.remove('hidden');
   goStep(1);
+  updateSubStrategyInfo();
   renderBudgetTable();
   renderRevExp();
   renderKPIs();
@@ -784,7 +898,7 @@ function renderBudgetTable(){
         const gIdx=budgetItems.indexOf(item);
         const iTotal=(item.q1||0)+(item.q2||0)+(item.q3||0)+(item.q4||0);
         html+=`<tr class="item-row"><td style="padding-left:36px;font-weight:400;font-size:12px">${catMap[g.id]||g.name}</td>
-          <td><input type="text" value="${item.desc||''}" onchange="budgetItems[${gIdx}].desc=this.value" placeholder="รายละเอียด เช่น Computers" style="font-size:11px"></td>
+          <td><input type="text" value="${item.desc||''}" onchange="budgetItems[${gIdx}].desc=this.value" placeholder="รายละเอียด" style="font-size:11px"></td>
           <td style="font-weight:600;font-size:12px">${iTotal.toLocaleString()}</td>
           <td><input type="number" value="${item.q1||0}" onchange="budgetItems[${gIdx}].q1=+this.value;renderBudgetTable()"></td>
           <td><input type="number" value="${item.q2||0}" onchange="budgetItems[${gIdx}].q2=+this.value;renderBudgetTable()"></td>
@@ -889,6 +1003,49 @@ function nextStep(){if(curStep<STEPS)goStep(curStep+1);}
 function prevStep(){if(curStep>1)goStep(curStep-1);}
 
 // ===================== DASHBOARD =====================
+let dashStratView = 'hosp';
+
+function setDashView(mode){
+  dashStratView=mode;
+  document.getElementById('dashViewHosp').className='btn btn-sm '+(mode==='hosp'?'btn-p':'btn-o');
+  document.getElementById('dashViewCRA').className='btn btn-sm '+(mode==='cra'?'btn-p':'btn-o');
+  renderDashStratCards();
+}
+
+function renderDashStratCards(){
+  const container=document.getElementById('soGridContainer');
+  if(dashStratView==='hosp'){
+    // Default SO1-SO4 cards
+    let h='';
+    for(let i=1;i<=4;i++){
+      const soUmbs=umbrellas.filter(u=>u.so===String(i));
+      const soUmbIds=soUmbs.map(u=>u.id);
+      const soSubs=subs.filter(s=>soUmbIds.includes(s.umbId));
+      const soBudget=soSubs.reduce((s,p)=>s+calcSubBudget(p),0);
+      const labels={1:'Service Excellence',2:'Outcome Excellence',3:'Sustainable Development',4:'Education & Research Integration'};
+      const names={1:'ยกระดับคุณภาพระบบบริการสู่ความเป็นเลิศ',2:'ยกระดับผลลัพธ์สู่ความเป็นเลิศ',3:'สร้างสรรค์บรรยากาศแห่งการพัฒนาเพื่อความยั่งยืน',4:'บูรณาการกับการศึกษาและการวิจัย'};
+      h+=`<div class="so-card so${i}" onclick="go('umbrella','${i}')"><div class="so-hd"><div class="so-ic">${i}</div><div><div class="so-ti">${names[i]}</div><div class="so-su">${labels[i]}</div></div></div><div class="so-ft"><span>${soSubs.length} โครงการ</span><span>${soBudget.toLocaleString()} บาท</span></div></div>`;
+    }
+    container.innerHTML=h;
+    container.style.gridTemplateColumns='repeat(2, 1fr)';
+  }else{
+    // CRA S1-S5 cards
+    const craColors={S1:'#6a1b9a',S2:'#0277bd',S3:'#1565c0',S4:'#e65100',S5:'#2e7d32'};
+    const craBgColors={S1:'#f3e5f5',S2:'#e1f5fe',S3:'#e3f2fd',S4:'#fff3e0',S5:'#e8f5e9'};
+    let craToSO={};Object.keys(SO_TO_CRA).forEach(so=>{SO_TO_CRA[so].forEach(sk=>{if(!craToSO[sk])craToSO[sk]=[];craToSO[sk].push(so);});});
+    let h='';
+    Object.keys(CRA_STRATEGY).forEach(sk=>{
+      const st=CRA_STRATEGY[sk];
+      const linkedSOs=craToSO[sk]||[];
+      let projects=[];linkedSOs.forEach(so=>{const soUmbs=umbrellas.filter(u=>u.so===so).map(u=>u.id);projects=projects.concat(subs.filter(s=>soUmbs.includes(s.umbId)));});
+      const totalBudget=projects.reduce((s,p)=>s+calcSubBudget(p),0);
+      h+=`<div class="so-card" style="border:2px solid ${craColors[sk]}20" onclick="go('strategy')"><div class="so-hd"><div class="so-ic" style="background:${craColors[sk]}">${sk.replace('S','')}</div><div><div class="so-ti">${sk}: ${st.name}</div><div class="so-su">เชื่อมโยง: ${linkedSOs.map(s=>'SO'+s).join(', ')}</div></div></div><div class="so-ft" style="background:${craBgColors[sk]}"><span>${projects.length} โครงการ</span><span>${totalBudget.toLocaleString()} บาท</span></div></div>`;
+    });
+    container.innerHTML=h;
+    container.style.gridTemplateColumns='repeat(2, 1fr)';
+  }
+}
+
 function updateDash(){
   const totalSubs=subs.length;
   const totalBudget=subs.reduce((s,p)=>s+calcSubBudget(p),0);
@@ -899,14 +1056,7 @@ function updateDash(){
   document.getElementById('dBudget').textContent=totalBudget.toLocaleString();
   document.getElementById('dSubmitted').textContent=submitted;
   document.getElementById('dApproved').textContent=approved.toLocaleString();
-  for(let i=1;i<=4;i++){
-    const soUmbs=umbrellas.filter(u=>u.so===String(i));
-    const soUmbIds=soUmbs.map(u=>u.id);
-    const soSubs=subs.filter(s=>soUmbIds.includes(s.umbId));
-    const soBudget=soSubs.reduce((s,p)=>s+calcSubBudget(p),0);
-    document.getElementById('dSO'+i+'c').textContent=soSubs.length+' โครงการ';
-    document.getElementById('dSO'+i+'b').textContent=soBudget.toLocaleString()+' บาท';
-  }
+  renderDashStratCards();
   renderSOChart(totalBudget);renderCatChart();
   // Update umbrella filter
   const sel=document.getElementById('fltUmb');
@@ -961,13 +1111,15 @@ function renderAll(){
   if(search)list=list.filter(s=>(s.name||'').toLowerCase().includes(search)||(s.dept||'').toLowerCase().includes(search));
   const ct=document.getElementById('allList');
   if(!list.length){ct.innerHTML='<div class="empty"><div class="ei">📋</div><h3>ไม่พบโครงการ</h3></div>';return;}
-  let h='<div class="tw"><table class="dt"><thead><tr><th>#</th><th>โครงการร่ม</th><th>โครงการย่อย</th><th>หน่วยงาน</th><th>SO</th><th style="text-align:right">งบประมาณ</th><th style="text-align:right">งบที่ได้</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
+  let h='<div class="tw"><table class="dt"><thead><tr><th>#</th><th>โครงการร่ม</th><th>โครงการย่อย</th><th>หน่วยงาน</th><th>SO</th><th>ยุทธศาสตร์</th><th style="text-align:right">งบประมาณ</th><th style="text-align:right">งบที่ได้</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
   list.forEach((s,i)=>{
     const umb=umbrellas.find(u=>u.id===s.umbId);
     const soNum=umb?umb.so:'-';
     const budget=calcSubBudget(s);
     const stB=s.status==='submitted'?'<span class="badge b-sub">ส่งแล้ว</span>':'<span class="badge b-draft">ร่าง</span>';
-    h+=`<tr><td>${i+1}</td><td style="font-size:12px;color:var(--g500)">${umb?umb.name:'-'}</td><td><strong style="cursor:pointer;color:var(--pri)" onclick="openSubForm('${s.id}')">${s.name||'-'}</strong></td><td>${s.dept||'-'}</td><td style="color:${SOC[soNum]||'#333'};font-weight:600">SO${soNum}</td><td style="text-align:right;font-weight:600">${budget.toLocaleString()}</td><td style="text-align:right">${(s.approvedBudget||0).toLocaleString()}</td><td>${stB}</td><td><div style="display:flex;gap:3px"><button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button><button class="btn-icon" onclick="exportWordById('${s.id}')" title="Word">📄</button><button class="btn-icon" onclick="deleteSub('${s.id}')" title="ลบ">🗑️</button></div></td></tr>`;
+    const craBdg=umb?(SO_TO_CRA[umb.so]||[]).map(sk=>`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}</span>`).join(''):'';
+    const siBdg=umb?(umb.si||[]).map(sid=>`<span class="strat-badge sb-si">${sid}</span>`).join(''):'';
+    h+=`<tr><td>${i+1}</td><td style="font-size:12px;color:var(--g500)">${umb?umb.name:'-'}</td><td><strong style="cursor:pointer;color:var(--pri)" onclick="openSubForm('${s.id}')">${s.name||'-'}</strong></td><td>${s.dept||'-'}</td><td style="color:${SOC[soNum]||'#333'};font-weight:600">SO${soNum}</td><td>${craBdg}${siBdg}</td><td style="text-align:right;font-weight:600">${budget.toLocaleString()}</td><td style="text-align:right">${(s.approvedBudget||0).toLocaleString()}</td><td>${stB}</td><td><div style="display:flex;gap:3px"><button class="btn-icon" onclick="openSubForm('${s.id}')" title="แก้ไข">✏️</button><button class="btn-icon" onclick="exportWordById('${s.id}')" title="Word">📄</button><button class="btn-icon" onclick="deleteSub('${s.id}')" title="ลบ">🗑️</button></div></td></tr>`;
   });
   h+='</tbody></table></div>';
   ct.innerHTML=h;
@@ -977,7 +1129,7 @@ function renderAll(){
 function renderSummary(){
   const ct=document.getElementById('summaryContent');
   const catNames={b1:'งบบุคลากร',b2a:'ค่าตอบแทน',b2b:'ค่าใช้สอย',b2c:'ค่าวัสดุ',b2d:'ค่าสาธารณูปโภค',b3a:'ค่าครุภัณฑ์',b3b:'ค่าที่ดินฯ'};
-  let h='<div class="tw" style="overflow-x:auto"><table class="sum-tbl"><thead><tr><th style="text-align:left">โครงการ</th><th style="text-align:left">หน่วยงาน</th><th>งบบุคลากร</th><th>ค่าตอบแทน</th><th>ค่าใช้สอย</th><th>ค่าวัสดุ</th><th>ค่าสาธารณูปโภค</th><th>ค่าครุภัณฑ์</th><th>ค่าที่ดินฯ</th><th>รวม</th><th>งบที่ได้</th><th>ผลต่าง</th></tr></thead><tbody>';
+  let h='<div class="tw" style="overflow-x:auto"><table class="sum-tbl"><thead><tr><th style="text-align:left">โครงการ</th><th style="text-align:left">หน่วยงาน</th><th style="text-align:left">ผู้ของบ</th><th style="text-align:left">ยุทธศาสตร์ รพ.</th><th style="text-align:left">ยุทธศาสตร์ รจภ</th><th>งบบุคลากร</th><th>ค่าตอบแทน</th><th>ค่าใช้สอย</th><th>ค่าวัสดุ</th><th>ค่าสาธารณูปโภค</th><th>ค่าครุภัณฑ์</th><th>ค่าที่ดินฯ</th><th>รวม</th><th>งบที่ได้</th><th>ผลต่าง</th></tr></thead><tbody>';
   let grandCats={b1:0,b2a:0,b2b:0,b2c:0,b2d:0,b3a:0,b3b:0};let grandTotal=0;let grandApproved=0;
   umbrellas.forEach((u,ui)=>{
     const mySubs=subs.filter(s=>s.umbId===u.id);
@@ -991,7 +1143,10 @@ function renderSummary(){
       umbApproved+=(s.approvedBudget||0);grandApproved+=(s.approvedBudget||0);
     });
     // Umbrella row
-    h+=`<tr class="row-umb"><td>${ui+1}. ${u.name} (SO${u.so})</td><td></td>`;
+    const umbSoBadge='SO'+u.so;
+    const umbSiBadges=(u.si||[]).map(sid=>`<span class="strat-badge sb-si">${sid}</span>`).join('');
+    const umbCraBadges=(SO_TO_CRA[u.so]||[]).map(sk=>`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}</span>`).join('');
+    h+=`<tr class="row-umb"><td>${ui+1}. ${u.name} (SO${u.so})</td><td></td><td></td><td style="text-align:left">${umbSoBadge} ${umbSiBadges}</td><td style="text-align:left">${umbCraBadges}</td>`;
     Object.keys(umbCats).forEach(k=>{h+=`<td>${umbCats[k].toLocaleString()}</td>`;});
     const umbDiff=umbApproved-umbTotal;
     h+=`<td style="font-weight:700">${umbTotal.toLocaleString()}</td><td>${umbApproved.toLocaleString()}</td><td class="${umbDiff>=0?'diff-pos':'diff-neg'}">${umbDiff.toLocaleString()}</td></tr>`;
@@ -1001,14 +1156,18 @@ function renderSummary(){
       (s.budgetItems||[]).forEach(bi=>{const v=(bi.q1||0)+(bi.q2||0)+(bi.q3||0)+(bi.q4||0);if(subCats[bi.catId]!==undefined)subCats[bi.catId]+=v;});
       const st=Object.values(subCats).reduce((a,b)=>a+b,0);
       const sd=(s.approvedBudget||0)-st;
-      h+=`<tr class="row-sub"><td>${ui+1}.${si+1} ${s.name}</td><td>${s.dept||'-'}</td>`;
+      const subOwner=s.resp||s.owner||'-';
+      const subSoBadge='SO'+u.so;
+      const subSiBadges=(u.si||[]).map(sid=>`<span class="strat-badge sb-si">${sid}</span>`).join('');
+      const subCraBadges=(SO_TO_CRA[u.so]||[]).map(sk=>`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}</span>`).join('');
+      h+=`<tr class="row-sub"><td>${ui+1}.${si+1} ${s.name}</td><td>${s.dept||'-'}</td><td style="text-align:left">${subOwner}</td><td style="text-align:left">${subSoBadge} ${subSiBadges}</td><td style="text-align:left">${subCraBadges}</td>`;
       Object.keys(subCats).forEach(k=>{h+=`<td>${subCats[k].toLocaleString()}</td>`;});
       h+=`<td>${st.toLocaleString()}</td><td>${(s.approvedBudget||0).toLocaleString()}</td><td class="${sd>=0?'diff-pos':'diff-neg'}">${sd.toLocaleString()}</td></tr>`;
     });
   });
   // Grand total
   const grandDiff=grandApproved-grandTotal;
-  h+=`<tr class="row-grand"><td>รวมทั้งสิ้น</td><td></td>`;
+  h+=`<tr class="row-grand"><td>รวมทั้งสิ้น</td><td></td><td></td><td></td><td></td>`;
   Object.keys(grandCats).forEach(k=>{h+=`<td>${grandCats[k].toLocaleString()}</td>`;});
   h+=`<td>${grandTotal.toLocaleString()}</td><td>${grandApproved.toLocaleString()}</td><td class="${grandDiff>=0?'diff-pos':'diff-neg'}">${grandDiff.toLocaleString()}</td></tr>`;
   h+='</tbody></table></div>';
@@ -1051,12 +1210,140 @@ function renderUsers(){
   const ct=document.getElementById('userList');
   let h='<div class="tw"><table class="dt"><thead><tr><th>#</th><th>Username</th><th>ชื่อ</th><th>นามสกุล</th><th>งาน (Unit)</th><th>ฝ่าย/ศูนย์</th><th>Email</th><th>Role</th><th>จัดการ</th></tr></thead><tbody>';
   users.forEach((u,i)=>{
-    h+=`<tr><td>${i+1}</td><td>${u.username}</td><td>${u.name}</td><td>${u.surname}</td><td>${u.unit||'-'}</td><td>${u.dept||'-'}</td><td>${u.email||'-'}</td><td><span class="badge ${u.role==='admin'?'b-str':'b-bas'}">${u.role}</span></td><td>${u.username!=='ake'?`<select class="fc" style="font-size:11px;width:90px;padding:4px" onchange="changeRole('${u.username}',this.value)"><option value="user" ${u.role==='user'?'selected':''}>user</option><option value="admin" ${u.role==='admin'?'selected':''}>admin</option></select>`:''}</td></tr>`;
+    const userSubCount=subs.filter(s=>s.owner===u.username).length;
+    h+=`<tr><td>${i+1}</td><td>${u.username}</td><td>${u.name}</td><td>${u.surname}</td><td>${u.unit||'-'}</td><td>${u.dept||'-'}</td><td>${u.email||'-'}</td><td><span class="badge ${u.role==='admin'?'b-str':'b-bas'}">${u.role}</span></td><td><div style="display:flex;gap:4px;align-items:center">${u.username!=='ake'?`<select class="fc" style="font-size:11px;width:80px;padding:4px" onchange="changeRole('${u.username}',this.value)"><option value="user" ${u.role==='user'?'selected':''}>user</option><option value="admin" ${u.role==='admin'?'selected':''}>admin</option></select>`:''}<button class="btn-icon" onclick="viewUserProjects('${u.username}')" title="ดูโครงการ (${userSubCount})">📋</button>${u.username!=='ake'?`<button class="btn-icon" onclick="deleteUser('${u.username}')" title="ลบผู้ใช้" style="color:var(--err)">🗑️</button>`:''}</div></td></tr>`;
   });
   h+='</tbody></table></div>';
   ct.innerHTML=h;
 }
 function changeRole(username,role){const u=users.find(x=>x.username===username);if(u){u.role=role;saveData();renderUsers();toast('เปลี่ยน role สำเร็จ');}}
+
+function deleteUser(username){
+  if(username==='ake'){toast('ไม่สามารถลบ admin หลักได้','err');return;}
+  const u=users.find(x=>x.username===username);
+  if(!u)return;
+  const userSubs=subs.filter(s=>s.owner===username);
+  const msg=userSubs.length?`ลบผู้ใช้ "${u.name} ${u.surname}" พร้อมโครงการย่อย ${userSubs.length} รายการ?`:`ลบผู้ใช้ "${u.name} ${u.surname}"?`;
+  if(!confirm(msg))return;
+  subs=subs.filter(s=>s.owner!==username);
+  users=users.filter(x=>x.username!==username);
+  saveData();renderUsers();updateDash();toast('ลบผู้ใช้สำเร็จ');
+}
+
+function viewUserProjects(username){
+  const u=users.find(x=>x.username===username);
+  const userSubs=subs.filter(s=>s.owner===username);
+  if(!userSubs.length){toast('ผู้ใช้นี้ยังไม่มีโครงการ');return;}
+  let list=userSubs.map((s,i)=>{const umb=umbrellas.find(x=>x.id===s.umbId);return `${i+1}. ${s.name||'(ไม่มีชื่อ)'} - ${umb?umb.name:'?'} (${calcSubBudget(s).toLocaleString()} บาท)`;}).join('\n');
+  alert(`โครงการของ ${u?u.name:username}:\n\n${list}`);
+}
+
+// ===================== SUB-PROJECT STRATEGY INFO =====================
+function updateSubStrategyInfo(){
+  const umbId=document.getElementById('sf_umb').value;
+  const infoDiv=document.getElementById('sf_strategy_info');
+  if(!umbId){infoDiv.innerHTML='<span style="color:var(--g500)">เลือกโครงการร่มเพื่อแสดงข้อมูลยุทธศาสตร์อัตโนมัติ</span>';return;}
+  const umb=umbrellas.find(u=>u.id===umbId);if(!umb){infoDiv.innerHTML='';return;}
+  const so=umb.so;
+  let h='';
+  // Show linked CRA strategies
+  const craKeys=SO_TO_CRA[so]||[];
+  if(craKeys.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">ยุทธศาสตร์ รจภ:</strong> ';craKeys.forEach(sk=>{const st=CRA_STRATEGY[sk];h+=`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}: ${st?st.name:''}</span> `;});h+='</div>';}
+  // Show umbrella's selected SI
+  if(umb.si&&umb.si.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">SI ของ รพ.:</strong> ';const siList=HOSPITAL_SI[so]||[];umb.si.forEach(sid=>{const si=siList.find(s=>s.id===sid);h+=`<span class="strat-badge sb-si">${sid}${si?': '+si.name:''}</span> `;});h+='</div>';}
+  // Show umbrella's selected CKPIs
+  if(umb.craCkpis&&umb.craCkpis.length){h+='<div><strong style="color:var(--acc)">CKPIs:</strong> ';umb.craCkpis.forEach(c=>{h+=`<span style="display:inline-block;margin:1px 4px;padding:1px 6px;background:var(--acc-l);border-radius:8px;font-size:11px">${c}</span>`;});h+='</div>';}
+  // Also set the hidden ckpi field
+  document.getElementById('sf_ckpi').value=(umb.craCkpis||[]).join(', ');
+  infoDiv.innerHTML=h||'<span style="color:var(--g500)">ไม่มีข้อมูลยุทธศาสตร์</span>';
+}
+
+// ===================== STRATEGY VIEW =====================
+let strategyViewMode='cra';
+
+function toggleStrategyView(mode){
+  strategyViewMode=mode;
+  document.getElementById('stratBtnCRA').className='btn '+(mode==='cra'?'btn-p strat-toggle active':'btn-o strat-toggle');
+  document.getElementById('stratBtnHosp').className='btn '+(mode==='hosp'?'btn-p strat-toggle active':'btn-o strat-toggle');
+  renderStrategy();
+}
+
+function renderStrategy(){
+  const ct=document.getElementById('strategyContent');
+  if(strategyViewMode==='cra') renderStrategyCRA(ct);
+  else renderStrategyHosp(ct);
+}
+
+function getProjectsForSO(soNum){
+  const soUmbs=umbrellas.filter(u=>u.so===String(soNum));
+  let projects=[];
+  soUmbs.forEach(u=>{
+    const mySubs=subs.filter(s=>s.umbId===u.id);
+    mySubs.forEach(s=>{projects.push({sub:s,umb:u});});
+  });
+  return projects;
+}
+
+function renderStrategyCRA(ct){
+  // Build reverse map: CRA strategy -> which SOs link to it
+  let craToSO={};Object.keys(SO_TO_CRA).forEach(so=>{SO_TO_CRA[so].forEach(sk=>{if(!craToSO[sk])craToSO[sk]=[];craToSO[sk].push(so);});});
+  let h='';
+  Object.keys(CRA_STRATEGY).forEach(sk=>{
+    const st=CRA_STRATEGY[sk];
+    const linkedSOs=craToSO[sk]||[];
+    let projects=[];linkedSOs.forEach(so=>{projects=projects.concat(getProjectsForSO(so));});
+    const totalBudget=projects.reduce((s,p)=>s+calcSubBudget(p.sub),0);
+    const cssClass='cra-'+sk.toLowerCase();
+    h+=`<div class="strat-card ${cssClass}">
+      <div class="strat-hd" onclick="this.nextElementSibling.classList.toggle('hidden')">
+        <div><div class="strat-title">${sk}: ${st.name}</div>
+        <div class="strat-sub">CKPIs: ${st.ckpis.join(' | ')}</div>
+        <div class="strat-sub">เชื่อมโยง: ${linkedSOs.map(s=>'SO'+s).join(', ')}</div></div>
+        <div style="text-align:right"><div style="font-weight:700;font-size:16px">${totalBudget.toLocaleString()} <span style="font-size:12px;font-weight:400">บาท</span></div><div style="font-size:12px;color:var(--g500)">${projects.length} โครงการ</div></div>
+      </div>
+      <div class="strat-body hidden">`;
+    if(!projects.length){h+='<div style="text-align:center;padding:16px;color:var(--g400)">ยังไม่มีโครงการ</div>';}
+    projects.forEach(p=>{
+      const budget=calcSubBudget(p.sub);
+      const craBadges=(SO_TO_CRA[p.umb.so]||[]).map(s=>`<span class="strat-badge sb-${s.toLowerCase()}">${s}</span>`).join('');
+      h+=`<div class="strat-proj"><div style="flex:1"><strong>${p.sub.name||'(ไม่มีชื่อ)'}</strong> <span style="color:var(--g500);font-size:11px">- ${p.umb.name}</span></div><div style="width:100px;color:var(--g500)">${p.sub.dept||'-'}</div><div style="width:120px;text-align:right;font-weight:600">${budget.toLocaleString()}</div><div style="width:100px">${craBadges}</div></div>`;
+    });
+    h+='</div></div>';
+  });
+  ct.innerHTML=h;
+}
+
+function renderStrategyHosp(ct){
+  let h='';
+  for(let so=1;so<=4;so++){
+    const soStr=String(so);
+    const siList=HOSPITAL_SI[soStr]||[];
+    const projects=getProjectsForSO(so);
+    const totalBudget=projects.reduce((s,p)=>s+calcSubBudget(p.sub),0);
+    const craKeys=SO_TO_CRA[soStr]||[];
+    const craBadges=craKeys.map(s=>`<span class="strat-badge sb-${s.toLowerCase()}">${s}: ${CRA_STRATEGY[s]?CRA_STRATEGY[s].name:''}</span>`).join(' ');
+    h+=`<div class="strat-card so${so}" style="border-left-color:var(--so${so})">
+      <div class="strat-hd" onclick="this.nextElementSibling.classList.toggle('hidden')">
+        <div><div class="strat-title">SO${so}: ${SO[soStr]}</div>
+        <div class="strat-sub">ยุทธศาสตร์ รจภ: ${craBadges}</div></div>
+        <div style="text-align:right"><div style="font-weight:700;font-size:16px">${totalBudget.toLocaleString()} <span style="font-size:12px;font-weight:400">บาท</span></div><div style="font-size:12px;color:var(--g500)">${projects.length} โครงการ | ${siList.length} SI</div></div>
+      </div>
+      <div class="strat-body hidden">`;
+    // Show SI sub-strategies
+    siList.forEach(si=>{
+      h+=`<div class="si-card"><div style="font-weight:600;font-size:13px;margin-bottom:4px">${si.id}: ${si.name}</div><div style="font-size:11px;color:var(--g500)">${si.kpis.join(' | ')}</div></div>`;
+    });
+    // Show projects
+    if(!projects.length){h+='<div style="text-align:center;padding:12px;color:var(--g400);font-size:13px">ยังไม่มีโครงการ</div>';}
+    projects.forEach(p=>{
+      const budget=calcSubBudget(p.sub);
+      const siBadges=(p.umb.si||[]).map(s=>`<span class="strat-badge sb-si">${s}</span>`).join('');
+      h+=`<div class="strat-proj"><div style="flex:1"><strong>${p.sub.name||'(ไม่มีชื่อ)'}</strong> <span style="color:var(--g500);font-size:11px">- ${p.umb.name}</span></div><div style="width:100px;color:var(--g500)">${p.sub.dept||'-'}</div><div style="width:120px;text-align:right;font-weight:600">${budget.toLocaleString()}</div><div style="width:120px">${siBadges}</div></div>`;
+    });
+    h+='</div></div>';
+  }
+  ct.innerHTML=h;
+}
 
 // ===================== EXPORT CSV =====================
 function exportCSV(){
@@ -1149,30 +1436,56 @@ function download(content,filename,type){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
 }
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=(type==='err'?'⚠️ ':'✅ ')+msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-function today(){return new Date().toISOString().slice(0,10);}
+function today(){const d=new Date();const y=d.getFullYear()+543;const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
 
-// ===================== PERSISTENCE =====================
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// ===================== PERSISTENCE (Firestore) =====================
+const DOC_REF = db.collection('appData').doc('main');
+let _saving = false;
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyATDkKgS-Eu_z_kVT_F5POattOp_xcewtw",
-  authDomain: "ch-budget-portal.firebaseapp.com",
-  projectId: "ch-budget-portal",
-  storageBucket: "ch-budget-portal.firebasestorage.app",
-  messagingSenderId: "85525194091",
-  appId: "1:85525194091:web:ffd1655c1ca23af31e582e"
-};
+function saveData(){
+  try{
+    const d = {users, umbrellas, subs, updatedAt: new Date().toISOString()};
+    window._appData = JSON.stringify(d);
+    // Debounce Firestore writes
+    if(_saving) return;
+    _saving = true;
+    setTimeout(()=>{
+      DOC_REF.set(d).catch(e=>console.warn('Firestore save error:',e));
+      _saving = false;
+    }, 500);
+  }catch(e){console.warn('saveData error:',e);}
+}
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+function loadData(){
+  // Load from in-memory first (instant)
+  try{
+    if(window._appData){
+      const d=JSON.parse(window._appData);
+      users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];
+    }
+  }catch(e){}
+}
 
+async function loadFromFirestore(){
+  try{
+    const snap = await DOC_REF.get();
+    if(snap.exists){
+      const d = snap.data();
+      users = d.users || users;
+      umbrellas = d.umbrellas || [];
+      subs = d.subs || [];
+      window._appData = JSON.stringify(d);
+      // Re-render if already in app
+      if(currentUser){
+        updateDash();renderUmbrellas();
+      }
+    }
+  }catch(e){console.warn('Firestore load error:',e);}
+}
 
 // ===================== INIT =====================
 loadData();
+loadFromFirestore();
 </script>
 </body>
 </html>
