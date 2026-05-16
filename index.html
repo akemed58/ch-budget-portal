@@ -1442,25 +1442,29 @@ function today(){const d=new Date();const y=d.getFullYear()+543;const m=String(d
 const DOC_REF = db.collection('appData').doc('main');
 let _saving = false;
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+function saveData(){
+  try{
+    const d = {users, umbrellas, subs, updatedAt: new Date().toISOString()};
+    window._appData = JSON.stringify(d);
+    // Debounce Firestore writes
+    if(_saving) return;
+    _saving = true;
+    setTimeout(()=>{
+      DOC_REF.set(d).catch(e=>console.warn('Firestore save error:',e));
+      _saving = false;
+    }, 500);
+  }catch(e){console.warn('saveData error:',e);}
+}
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCY3Iz2GdFVUDO18U03o0kYgqTO5Fq-Hj8",
-    authDomain: "ch-budget-4f50b.firebaseapp.com",
-    projectId: "ch-budget-4f50b",
-    storageBucket: "ch-budget-4f50b.firebasestorage.app",
-    messagingSenderId: "893904525839",
-    appId: "1:893904525839:web:4dc910cb707989524b617a"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+function loadData(){
+  // Load from in-memory first (instant)
+  try{
+    if(window._appData){
+      const d=JSON.parse(window._appData);
+      users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];
+    }
+  }catch(e){}
+}
 
 async function loadFromFirestore(){
   try{
