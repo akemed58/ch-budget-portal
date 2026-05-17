@@ -1687,53 +1687,86 @@ function toast(msg,type){const t=document.getElementById('toast');t.textContent=
 function today(){const d=new Date();const y=d.getFullYear()+543;const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
 
 // ===================== PERSISTENCE (Firestore) =====================
-const DOC_REF = db.collection('appData').doc('main');
-let _saving = false;
+<script type="module">
+  // 1. Import ฟังก์ชันจาก Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-function saveData(){
-  try{
-    const d = {users, umbrellas, subs, updatedAt: new Date().toISOString()};
-    window._appData = JSON.stringify(d);
-    // Debounce Firestore writes
-    if(_saving) return;
-    _saving = true;
-    setTimeout(()=>{
-      DOC_REF.set(d).catch(e=>console.warn('Firestore save error:',e));
-      _saving = false;
-    }, 500);
-  }catch(e){console.warn('saveData error:',e);}
-}
+  // 2. ใส่ Firebase Configuration ชุดใหม่จากรูปภาพ
+  const firebaseConfig = {
+    apiKey: "AIzaSyATDkKgS-Eu_z_kVT_F5POattOp_xcewtw",
+    authDomain: "ch-budget-portal.firebaseapp.com",
+    projectId: "ch-budget-portal",
+    storageBucket: "ch-budget-portal.firebasestorage.app",
+    messagingSenderId: "85525194091",
+    appId: "1:85525194091:web:ffd1655c1ca23af31e582e"
+  };
 
-function loadData(){
-  // Load from in-memory first (instant)
-  try{
-    if(window._appData){
-      const d=JSON.parse(window._appData);
-      users=d.users||users;umbrellas=d.umbrellas||[];subs=d.subs||[];
-    }
-  }catch(e){}
-}
+  // 3. เริ่มต้นการเชื่อมต่อ Firebase และ Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-async function loadFromFirestore(){
-  try{
-    const snap = await DOC_REF.get();
-    if(snap.exists){
-      const d = snap.data();
-      users = d.users || users;
-      umbrellas = d.umbrellas || [];
-      subs = d.subs || [];
+  // ===================== PERSISTENCE (Firestore) =====================
+  const DOC_REF = doc(db, 'appData', 'main');
+  let _saving = false;
+
+  window.saveData = function() {
+    try {
+      const d = { users, umbrellas, subs, updatedAt: new Date().toISOString() };
       window._appData = JSON.stringify(d);
-      // Re-render if already in app
-      if(currentUser){
-        updateDash();renderUmbrellas();
-      }
+      
+      // Debounce Firestore writes
+      if (_saving) return;
+      _saving = true;
+      
+      setTimeout(async () => {
+        try {
+          await setDoc(DOC_REF, d);
+          _saving = false;
+        } catch (e) {
+          console.warn('Firestore save error:', e);
+          _saving = false;
+        }
+      }, 500);
+    } catch (e) {
+      console.warn('saveData error:', e);
     }
-  }catch(e){console.warn('Firestore load error:',e);}
-}
+  };
 
-// ===================== INIT =====================
-loadData();
-loadFromFirestore();
+  window.loadData = function() {
+    // Load from in-memory first (instant)
+    try {
+      if (window._appData) {
+        const d = JSON.parse(window._appData);
+        users = d.users || users; 
+        umbrellas = d.umbrellas || []; 
+        subs = d.subs || [];
+      }
+    } catch (e) {}
+  };
+
+  window.loadFromFirestore = async function() {
+    try {
+      const snap = await getDoc(DOC_REF);
+      if (snap.exists()) {
+        const d = snap.data();
+        users = d.users || users;
+        umbrellas = d.umbrellas || [];
+        subs = d.subs || [];
+        window._appData = JSON.stringify(d);
+        
+        // Re-render if already in app
+        if (typeof currentUser !== 'undefined' && currentUser) {
+          updateDash(); 
+          renderUmbrellas();
+        }
+      }
+    } catch (e) {
+      console.warn('Firestore load error:', e);
+    }
+  };
+
+  // ===================== INIT =====================
+  window.loadData();
+  window.loadFromFirestore();
 </script>
-</body>
-</html>
