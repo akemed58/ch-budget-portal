@@ -1481,6 +1481,15 @@ function viewUserProjects(username){
 }
 
 // ===================== SUB-PROJECT STRATEGY INFO =====================
+function updateSubCkpiField(){
+  const selected=[];document.querySelectorAll('input[name="sf_sub_ckpi"]:checked').forEach(cb=>selected.push(cb.value));
+  document.getElementById('sf_ckpi').value=selected.join(', ');
+  // Update checkbox label styling
+  document.querySelectorAll('input[name="sf_sub_ckpi"]').forEach(cb=>{
+    const lbl=cb.parentElement;if(lbl)lbl.style.background=cb.checked?'var(--acc-l)':'#fff';
+  });
+}
+
 function updateSubStrategyInfo(){
   const umbId=document.getElementById('sf_umb').value;
   const infoDiv=document.getElementById('sf_strategy_info');
@@ -1493,11 +1502,21 @@ function updateSubStrategyInfo(){
   if(craKeys.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">ยุทธศาสตร์ รจภ:</strong> ';craKeys.forEach(sk=>{const st=CRA_STRATEGY[sk];h+=`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}: ${st?st.name:''}</span> `;});h+='</div>';}
   // Show umbrella's selected SI
   if(umb.si&&umb.si.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">SI ของ รพ.:</strong> ';const siList=HOSPITAL_SI[so]||[];umb.si.forEach(sid=>{const si=siList.find(s=>s.id===sid);h+=`<span class="strat-badge sb-si">${sid}${si?': '+si.name:''}</span> `;});h+='</div>';}
-  // Show umbrella's selected CKPIs
-  if(umb.craCkpis&&umb.craCkpis.length){h+='<div><strong style="color:var(--acc)">CKPIs:</strong> ';umb.craCkpis.forEach(c=>{h+=`<span style="display:inline-block;margin:1px 4px;padding:1px 6px;background:var(--acc-l);border-radius:8px;font-size:11px">${c}</span>`;});h+='</div>';}
-  // Also set the hidden ckpi field
-  document.getElementById('sf_ckpi').value=(umb.craCkpis||[]).join(', ');
+  // Show umbrella's selected CKPIs as checkboxes
+  if(umb.craCkpis&&umb.craCkpis.length){
+    // Get previously saved sub-project CKPIs (if editing)
+    const savedCkpi=document.getElementById('sf_ckpi').value;
+    const savedList=savedCkpi?savedCkpi.split(', ').filter(x=>x):[];
+    const useDefaults=!editSubId||!savedList.length;
+    h+='<div style="margin-top:6px"><strong style="color:var(--acc)">CKPIs:</strong> <span style="font-size:11px;color:var(--g500)">(เลือก CKPIs ที่เกี่ยวข้องกับโครงการย่อยนี้)</span><div style="margin-top:4px">';
+    umb.craCkpis.forEach(c=>{
+      const isChecked=useDefaults?true:savedList.includes(c);
+      h+=`<label style="display:inline-flex;align-items:center;margin:3px 8px 3px 0;cursor:pointer;font-size:12px;padding:2px 8px;border-radius:8px;border:1px solid var(--acc);background:${isChecked?'var(--acc-l)':'#fff'}"><input type="checkbox" name="sf_sub_ckpi" value="${c}" ${isChecked?'checked':''} style="accent-color:var(--acc);margin-right:4px" onchange="updateSubCkpiField()"> ${c}</label>`;
+    });
+    h+='</div></div>';
+  }
   infoDiv.innerHTML=h||'<span style="color:var(--g500)">ไม่มีข้อมูลยุทธศาสตร์</span>';
+  updateSubCkpiField();
 }
 
 // ===================== STRATEGY VIEW =====================
