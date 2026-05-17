@@ -301,6 +301,7 @@ select.fc{cursor:pointer}
     <button class="btn btn-sm btn-o" id="dashViewCRA" onclick="setDashView('cra')">ยุทธศาสตร์ รจภ</button>
   </div>
   <div class="so-grid" id="soGridContainer"></div>
+  <div id="siBreakdownContainer" style="margin:16px 0"></div>
   <div class="chart-grid">
     <div class="chart-card"><h3>สัดส่วนงบประมาณตาม SO</h3><div id="chSO"></div></div>
     <div class="chart-card"><h3>สัดส่วนตามหมวดรายจ่าย</h3><div id="chCat"></div></div>
@@ -649,7 +650,9 @@ function openUmbrellaForm(id){
   updateUmbrellaStrategy();// restore saved selections
   setTimeout(()=>{// restore CRA strategies
     if(u.craStrategies&&u.craStrategies.length){document.querySelectorAll('#uf_cra_area input[name="uf_cra"]').forEach(cb=>{cb.checked=u.craStrategies.includes(cb.value);});updateCraCkpis();}
-    if(u.si&&u.si.length){u.si.forEach(sid=>{const cb=document.querySelector('#uf_si_area input[value="'+sid+'"]');if(cb)cb.checked=true;});}
+    if(u.si&&u.si.length){u.si.forEach(sid=>{const cb=document.querySelector('#uf_si_area input[name="uf_si_cb"][value="'+sid+'"]');if(cb){cb.checked=true;toggleSiKpis(cb);}});
+      // Restore individual SI KPIs - uncheck those not saved
+      if(u.siKpis&&u.siKpis.length){document.querySelectorAll('#uf_si_area input[name="uf_si_kpi"]').forEach(k=>{k.checked=u.siKpis.includes(k.value);});}}
     if(u.craCkpis&&u.craCkpis.length){u.craCkpis.forEach(ck=>{const cb=document.querySelector('#uf_ckpi_area input[value="'+CSS.escape(ck)+'"]');if(cb)cb.checked=true;});}},50);}document.getElementById('umbModalTitle').textContent='แก้ไขโครงการร่ม';}
   else{document.getElementById('uf_name').value='';document.getElementById('uf_so').value='';document.getElementById('uf_obj').value='';document.getElementById('uf_kr').value='';document.getElementById('uf_si_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_cra_area').innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';document.getElementById('uf_ckpi_area').innerHTML='';document.getElementById('umbModalTitle').textContent='เพิ่มโครงการร่ม';
   docFields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});document.querySelector('input[name="uf_nature"][value="ongoing"]').checked=true;}
@@ -662,9 +665,9 @@ function updateUmbrellaStrategy(){
   const craArea=document.getElementById('uf_cra_area');
   const ckpiArea=document.getElementById('uf_ckpi_area');
   if(!so){siArea.innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';craArea.innerHTML='<span style="color:var(--g500)">กรุณาเลือก SO ก่อน</span>';ckpiArea.innerHTML='';return;}
-  // Populate SI checkboxes
+  // Populate SI checkboxes with KPI sub-items
   const siList=HOSPITAL_SI[so]||[];
-  let siH='';siList.forEach(si=>{siH+=`<label style="display:block;margin-bottom:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="${si.id}" style="accent-color:var(--pri);margin-right:6px"> <strong>${si.id}</strong>: ${si.name}<div style="margin-left:24px;font-size:11px;color:var(--g500)">${si.kpis.join(', ')}</div></label>`;});
+  let siH='';siList.forEach(si=>{siH+=`<div style="margin-bottom:10px;border:1px solid var(--g200);border-radius:8px;padding:8px 10px"><label style="display:block;cursor:pointer;font-size:13px;font-weight:600"><input type="checkbox" value="${si.id}" name="uf_si_cb" style="accent-color:var(--pri);margin-right:6px" onchange="toggleSiKpis(this)"> ${si.id}: ${si.name}</label><div class="si-kpi-group" data-si="${si.id}" style="margin:6px 0 0 24px;display:none">${si.kpis.map(k=>`<label style="display:inline-flex;align-items:center;margin:2px 10px 2px 0;cursor:pointer;font-size:12px"><input type="checkbox" name="uf_si_kpi" value="${k}" style="accent-color:var(--pri);margin-right:4px"> ${k}</label>`).join('')}</div></div>`;});
   siArea.innerHTML=siH||'<span style="color:var(--g500)">ไม่มี SI สำหรับ SO นี้</span>';
   // Populate CRA Strategy checkboxes (S1-S5) - pre-check suggested ones
   const suggested=SO_TO_CRA[so]||[];
@@ -679,6 +682,14 @@ function updateCraCkpis(){
   let ckH='';selectedCra.forEach(sk=>{const st=CRA_STRATEGY[sk];if(!st)return;ckH+=`<div style="margin-bottom:8px"><div style="font-weight:600;font-size:13px;color:var(--pri);margin-bottom:4px">${sk}: ${st.name}</div>`;st.ckpis.forEach(c=>{ckH+=`<label style="display:inline-block;margin:2px 10px 2px 0;cursor:pointer;font-size:12px"><input type="checkbox" value="${c}" style="accent-color:var(--acc);margin-right:4px">${c}</label>`;});ckH+='</div>';});
   ckpiArea.innerHTML=ckH;
 }
+function toggleSiKpis(cb){
+  const siId=cb.value;
+  const group=document.querySelector('.si-kpi-group[data-si="'+siId+'"]');
+  if(group){group.style.display=cb.checked?'block':'none';
+    if(cb.checked){group.querySelectorAll('input[name="uf_si_kpi"]').forEach(k=>k.checked=true);}
+    else{group.querySelectorAll('input[name="uf_si_kpi"]').forEach(k=>k.checked=false);}
+  }
+}
 function closeUmbModal(){document.getElementById('umbModal').classList.add('hidden');editUmbId=null;}
 
 function saveUmbrella(){
@@ -689,7 +700,9 @@ function saveUmbrella(){
   const obj=document.getElementById('uf_obj').value;
   const kr=document.getElementById('uf_kr').value;
   // Collect SI checkboxes
-  const si=[];document.querySelectorAll('#uf_si_area input[type=checkbox]:checked').forEach(cb=>si.push(cb.value));
+  const si=[];document.querySelectorAll('#uf_si_area input[name="uf_si_cb"]:checked').forEach(cb=>si.push(cb.value));
+  // Collect SI KPIs
+  const siKpis=[];document.querySelectorAll('#uf_si_area input[name="uf_si_kpi"]:checked').forEach(cb=>siKpis.push(cb.value));
   // Collect CRA Strategy checkboxes
   const craStrategies=[];document.querySelectorAll('#uf_cra_area input[name="uf_cra"]:checked').forEach(cb=>craStrategies.push(cb.value));
   // Collect CRA CKPIs checkboxes
@@ -704,8 +717,8 @@ function saveUmbrella(){
   const duration=document.getElementById('uf_duration').value;const outcome=document.getElementById('uf_outcome').value;
   const impact=document.getElementById('uf_impact').value;
   const docData={dept2,resp,nature,rationale,objectives,method,targetDesc,targetNum,location,duration,outcome,impact};
-  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;u.si=si;u.craStrategies=craStrategies;u.craCkpis=craCkpis;Object.assign(u,docData);}}
-  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi,si,craStrategies,craCkpis,...docData});}
+  if(editUmbId){const u=umbrellas.find(x=>x.id===editUmbId);if(u){u.name=name;u.so=so;u.type=type;u.obj=obj;u.kr=kr;u.ckpi=ckpi;u.si=si;u.siKpis=siKpis;u.craStrategies=craStrategies;u.craCkpis=craCkpis;Object.assign(u,docData);}}
+  else{umbrellas.push({id:Date.now().toString(),name,so,type,obj,kr,ckpi,si,siKpis,craStrategies,craCkpis,...docData});}
   saveData();closeUmbModal();go('umbrella');toast('บันทึกโครงการร่มสำเร็จ');
 }
 
@@ -1057,6 +1070,7 @@ function collectSubData(){
     soDetail:document.getElementById('sf_soDetail').value,
     kr:document.getElementById('sf_kr').value,
     ckpi:document.getElementById('sf_ckpi').value,
+    subSiKpis:[...document.querySelectorAll('input[name="sf_sub_si_kpi"]:checked')].map(cb=>cb.value),
     rationale:document.getElementById('sf_rationale').value,
     objectives:document.getElementById('sf_objectives').value,
     method:document.getElementById('sf_method').value,
@@ -1288,6 +1302,61 @@ function renderDashStratCards(){
   }
 }
 
+function renderSiBreakdown(){
+  const ct=document.getElementById('siBreakdownContainer');if(!ct)return;
+  // Build SI → budget/project count mapping
+  const siData={};
+  // Iterate all SOs
+  for(let so=1;so<=4;so++){
+    const soStr=String(so);
+    const siList=HOSPITAL_SI[soStr]||[];
+    siList.forEach(si=>{
+      siData[si.id]={name:si.name,so:soStr,budget:0,projects:0,kpis:{}};
+      si.kpis.forEach(k=>{siData[si.id].kpis[k]={budget:0,projects:0};});
+    });
+  }
+  // Map umbrella → SI → sub-projects
+  umbrellas.forEach(u=>{
+    if(!u.si||!u.si.length)return;
+    const mySubs=subs.filter(s=>s.umbId===u.id);
+    u.si.forEach(sid=>{
+      if(!siData[sid])return;
+      mySubs.forEach(sub=>{
+        const b=calcSubBudget(sub);
+        siData[sid].budget+=b;
+        siData[sid].projects++;
+        // Map to KPI level if sub has subSiKpis
+        const subKpis=sub.subSiKpis||[];
+        if(subKpis.length){
+          subKpis.forEach(k=>{if(siData[sid].kpis[k]){siData[sid].kpis[k].budget+=b;siData[sid].kpis[k].projects++;}});
+        }else{
+          // If no specific KPIs selected, count for all KPIs of this SI
+          Object.keys(siData[sid].kpis).forEach(k=>{siData[sid].kpis[k].budget+=b;siData[sid].kpis[k].projects++;});
+        }
+      });
+    });
+  });
+  // Render table
+  let h='<div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)"><h3 style="margin:0 0 12px;font-size:15px;color:var(--pri)">งบประมาณแยกตาม Strategic Initiatives (SI)</h3>';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:var(--pri);color:#fff"><th style="padding:8px;text-align:left">SI</th><th style="padding:8px;text-align:left">ชื่อ</th><th style="padding:8px;text-align:center">SO</th><th style="padding:8px;text-align:right">จำนวนโครงการ</th><th style="padding:8px;text-align:right">งบประมาณ (บาท)</th></tr></thead><tbody>';
+  let hasData=false;
+  Object.keys(siData).sort().forEach(sid=>{
+    const d=siData[sid];
+    if(!d.projects)return;
+    hasData=true;
+    h+=`<tr style="background:var(--pri-ll);font-weight:600;border-bottom:1px solid var(--g200)"><td style="padding:6px 8px">${sid}</td><td style="padding:6px 8px">${d.name}</td><td style="padding:6px 8px;text-align:center">SO${d.so}</td><td style="padding:6px 8px;text-align:right">${d.projects}</td><td style="padding:6px 8px;text-align:right">${d.budget.toLocaleString()}</td></tr>`;
+    // Show KPI breakdown
+    Object.keys(d.kpis).forEach(k=>{
+      const kd=d.kpis[k];
+      if(!kd.projects)return;
+      h+=`<tr style="border-bottom:1px solid var(--g100)"><td style="padding:4px 8px 4px 24px;color:var(--g500);font-size:12px" colspan="3">${k}</td><td style="padding:4px 8px;text-align:right;font-size:12px;color:var(--g500)">${kd.projects}</td><td style="padding:4px 8px;text-align:right;font-size:12px;color:var(--g500)">${kd.budget.toLocaleString()}</td></tr>`;
+    });
+  });
+  if(!hasData)h+='<tr><td colspan="5" style="padding:16px;text-align:center;color:var(--g400)">ยังไม่มีข้อมูลโครงการ</td></tr>';
+  h+='</tbody></table></div>';
+  ct.innerHTML=h;
+}
+
 function updateDash(){
   const totalSubs=subs.length;
   const totalBudget=subs.reduce((s,p)=>s+calcSubBudget(p),0);
@@ -1299,6 +1368,7 @@ function updateDash(){
   document.getElementById('dSubmitted').textContent=submitted;
   document.getElementById('dApproved').textContent=approved.toLocaleString();
   renderDashStratCards();
+  renderSiBreakdown();
   renderSOChart(totalBudget);renderCatChart();
   // Update umbrella filter
   const sel=document.getElementById('fltUmb');
@@ -1481,6 +1551,10 @@ function viewUserProjects(username){
 }
 
 // ===================== SUB-PROJECT STRATEGY INFO =====================
+function updateSubSiKpiStyle(cb){
+  const lbl=cb.parentElement;if(lbl)lbl.style.background=cb.checked?'var(--pri-ll)':'#fff';
+}
+
 function updateSubCkpiField(){
   const selected=[];document.querySelectorAll('input[name="sf_sub_ckpi"]:checked').forEach(cb=>selected.push(cb.value));
   document.getElementById('sf_ckpi').value=selected.join(', ');
@@ -1500,8 +1574,27 @@ function updateSubStrategyInfo(){
   // Show linked CRA strategies
   const craKeys=getUmbCRA(umb);
   if(craKeys.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">ยุทธศาสตร์ รจภ:</strong> ';craKeys.forEach(sk=>{const st=CRA_STRATEGY[sk];h+=`<span class="strat-badge sb-${sk.toLowerCase()}">${sk}: ${st?st.name:''}</span> `;});h+='</div>';}
-  // Show umbrella's selected SI
-  if(umb.si&&umb.si.length){h+='<div style="margin-bottom:6px"><strong style="color:var(--pri)">SI ของ รพ.:</strong> ';const siList=HOSPITAL_SI[so]||[];umb.si.forEach(sid=>{const si=siList.find(s=>s.id===sid);h+=`<span class="strat-badge sb-si">${sid}${si?': '+si.name:''}</span> `;});h+='</div>';}
+  // Show umbrella's selected SI with KPI checkboxes
+  if(umb.si&&umb.si.length){
+    const siList=HOSPITAL_SI[so]||[];
+    const umbSiKpis=umb.siKpis||[];
+    // Get saved sub-project SI KPIs
+    const savedSubSiKpis=editSubId?((subs.find(x=>x.id===editSubId)||{}).subSiKpis||[]):[];
+    const useSubDefaults=!editSubId||!savedSubSiKpis.length;
+    h+='<div style="margin-bottom:8px"><strong style="color:var(--pri)">SI ของ รพ.:</strong> <span style="font-size:11px;color:var(--g500)">(เลือก KPI ที่เกี่ยวข้องกับโครงการย่อยนี้)</span>';
+    umb.si.forEach(sid=>{
+      const si=siList.find(s=>s.id===sid);if(!si)return;
+      // Get KPIs available from umbrella for this SI
+      const availKpis=si.kpis.filter(k=>!umbSiKpis.length||umbSiKpis.includes(k));
+      h+=`<div style="margin:6px 0 4px 0;padding:6px 8px;border:1px solid var(--g200);border-radius:6px"><div style="font-weight:600;font-size:12px;color:var(--pri);margin-bottom:4px">${sid}: ${si.name}</div>`;
+      availKpis.forEach(k=>{
+        const isChecked=useSubDefaults?true:savedSubSiKpis.includes(k);
+        h+=`<label style="display:inline-flex;align-items:center;margin:2px 8px 2px 0;cursor:pointer;font-size:11px;padding:1px 6px;border-radius:6px;border:1px solid var(--pri);background:${isChecked?'var(--pri-ll)':'#fff'}"><input type="checkbox" name="sf_sub_si_kpi" value="${k}" ${isChecked?'checked':''} style="accent-color:var(--pri);margin-right:3px" onchange="updateSubSiKpiStyle(this)"> ${k}</label>`;
+      });
+      h+='</div>';
+    });
+    h+='</div>';
+  }
   // Show umbrella's selected CKPIs as checkboxes
   if(umb.craCkpis&&umb.craCkpis.length){
     // Get previously saved sub-project CKPIs (if editing)
